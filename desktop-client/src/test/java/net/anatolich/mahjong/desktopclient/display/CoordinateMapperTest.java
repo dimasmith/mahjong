@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- *
+ * Tests conversion of 3D coordinates to 2D flat coordinates for rendering.
  * @author Dmytro Kovalchuk<dimasmith@gmail.com>
  */
 public class CoordinateMapperTest {
@@ -18,10 +18,10 @@ public class CoordinateMapperTest {
 
         final CoordinateMapper mapper = new CoordinateMapper(pixelRatio);
 
-        Point2D point = mapper.mapTo2D(c);
-
-        assertEquals("Bad mapping for X coordinate " + c, 30.0, point.getX(), 0.5);
-        assertEquals("Bad mapping for Y coordinate " + c, 40.0, point.getY(), 0.5);
+        Point2D actualPoint = mapper.mapTo2D(c);
+        final double x = 30.0;
+        final double y = 40.0;
+        assertPointEquals(c, actualPoint, x, y);
     }
 
     @Test
@@ -31,10 +31,10 @@ public class CoordinateMapperTest {
 
         final CoordinateMapper mapper = new CoordinateMapper(pixelRatio);
 
-        Point2D point = mapper.mapTo2D(c);
-
-        assertEquals("Bad mapping for X coordinate " + c, 44.1, point.getX(), 0.5);
-        assertEquals("Bad mapping for Y coordinate " + c, 25.8, point.getY(), 0.5);
+        Point2D actualPoint = mapper.mapTo2D(c);
+        final double x = 44.1;
+        final double y = 25.8;
+        assertPointEquals(c, actualPoint, x, y);
     }
 
     @Test
@@ -44,10 +44,10 @@ public class CoordinateMapperTest {
 
         final CoordinateMapper mapper = new CoordinateMapper(pixelRatio);
 
-        Point2D point = mapper.mapTo2D(c);
-
-        assertEquals("Bad mapping for X coordinate " + c, 88.3, point.getX(), 0.5);
-        assertEquals("Bad mapping for Y coordinate " + c, 51.7, point.getY(), 0.5);
+        Point2D actualPoint = mapper.mapTo2D(c);
+        final double x = 88.3;
+        final double y = 51.7;
+        assertPointEquals(c, actualPoint, x, y);
     }
 
     @Test
@@ -57,9 +57,15 @@ public class CoordinateMapperTest {
 
         final CoordinateMapper mapper = new CoordinateMapper(pixelRatio);
 
-        Point2D point = mapper.mapTo2D(c);
+        Point2D actualPoint = mapper.mapTo2D(c);
+        final double x = 134.1;
+        final double y = 65.8;
+        assertPointEquals(c, actualPoint, x, y);
+    }
 
-        assertEquals("Bad mapping for X coordinate " + c, 134.1, point.getX(), 0.5);
-        assertEquals("Bad mapping for Y coordinate " + c, 65.8, point.getY(), 0.5);
+    private void assertPointEquals( final Coordinates coordinates, Point2D actualPoint, final double expectedX,
+                                    final double expectedY ) {
+        assertEquals("Bad mapping for X coordinate " + coordinates, expectedX, actualPoint.getX(), 0.5);
+        assertEquals("Bad mapping for Y coordinate " + coordinates, expectedY, actualPoint.getY(), 0.5);
     }
 }
