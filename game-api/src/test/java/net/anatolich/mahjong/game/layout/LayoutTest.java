@@ -1,9 +1,6 @@
 package net.anatolich.mahjong.game.layout;
 
-import net.anatolich.mahjong.game.layout.IllegalLayoutException;
-import net.anatolich.mahjong.game.layout.HangingSlotException;
-import net.anatolich.mahjong.game.layout.EmptyLayerException;
-import net.anatolich.mahjong.game.layout.Layout;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -139,5 +136,41 @@ public class LayoutTest {
         List<Column> columnsByLayer = layout.getLayerSlots(checkedLayer);
 
         assertThat(columnsByLayer, hasItems(coordinates1.getColumn(), coordinates2.getColumn(), coordinates3.getColumn()));
+    }
+
+    @Test
+    public void testGetBounds(){
+        List<Coordinates> slotCoords = new ArrayList<>();
+
+        slotCoords.add(new Coordinates(2, 2, 0));
+        slotCoords.add(new Coordinates(5, 6, 0));
+        slotCoords.add(new Coordinates(12, 16, 0));
+        slotCoords.add(new Coordinates(10, 10, 0));
+        slotCoords.add(new Coordinates(10, 10, 1));
+        slotCoords.add(new Coordinates(10, 10, 2));
+
+        Layout layout = new Layout(slotCoords);
+
+        Coordinates lowerBound = layout.getLowerBound();
+        Coordinates upperBound = layout.getUpperBound();
+
+        assertThat(lowerBound, is(new Coordinates(2,2,0)));
+        assertThat(upperBound, is(new Coordinates(12,16, 2)));
+    }
+
+    @Test
+    public void testValidate_OverlappingSlots(){
+        final Set<Coordinates> slots = new HashSet<>();
+        final int checkedLayer = 0;
+
+        final Coordinates coordinates1 = new Coordinates(0, 0, checkedLayer);
+        final Coordinates coordinates2 = new Coordinates(1, 0, checkedLayer);
+
+        slots.add(coordinates1);
+        slots.add(coordinates2);
+
+        Layout layout = new Layout(slots);
+        List<Column> columnsByLayer = layout.getLayerSlots(checkedLayer);
+
     }
 }

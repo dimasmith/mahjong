@@ -84,6 +84,10 @@ public final class Layout {
         return layerColumns.get(layer);
     }
 
+    int getSlotsCount() {
+        return slots.size();
+    }
+
     private int calculateTopLayer() {
         int topmostLayer = 0;
         for ( Coordinates coordinates : slots ) {
@@ -99,5 +103,29 @@ public final class Layout {
             }
 
         }
+    }
+
+    Coordinates getLowerBound() {
+        int minX = Integer.MAX_VALUE;
+        int minY = Integer.MAX_VALUE;
+        int minLayer = Integer.MAX_VALUE;
+        for ( Coordinates coordinates : slots ) {
+            minX = Math.min(minX, coordinates.getX());
+            minY = Math.min(minY, coordinates.getY());
+            minLayer = Math.min(minLayer, coordinates.getLayer());
+        }
+        return new Coordinates(minX, minY, minLayer);
+    }
+
+    Coordinates getUpperBound() {
+        int maxX = 0;
+        int maxY = 0;
+        int maxLayer = 0;
+        for ( Coordinates coordinates : slots ) {
+            maxX = Math.max(maxX, coordinates.getX());
+            maxY = Math.max(maxY, coordinates.getY());
+            maxLayer = Math.max(maxLayer, coordinates.getLayer());
+        }
+        return new Coordinates(maxX, maxY, maxLayer);
     }
 }

@@ -9,7 +9,8 @@
     <url>https://github.com/dimasmith/mahjong</url>
     <modules>
         <module>game-api</module>
-    </modules>
+    <module>desktop-client</module>
+  </modules>
 
     <build>
         <plugins>
@@ -58,6 +59,11 @@
                 <artifactId>easymock</artifactId>
                 <version>3.1</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>1.0.9</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
