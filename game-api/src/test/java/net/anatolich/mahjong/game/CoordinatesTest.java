@@ -25,7 +25,7 @@ public class CoordinatesTest {
     }
 
     @Test
-    public void testConstructorSetUp_Column(){
+    public void testConstructorSetUp_Column() {
         final int x = 10;
         final int y = 20;
         final int l = 30;
@@ -38,7 +38,7 @@ public class CoordinatesTest {
     }
 
     @Test
-    public void testIsOnColumn(){
+    public void testIsOnColumn() {
         Coordinates coordinates = new Coordinates(0, 0, 0);
         Column column = new Column(0, 0);
 
@@ -46,7 +46,7 @@ public class CoordinatesTest {
     }
 
     @Test
-    public void testIsOnColumn_Failure(){
+    public void testIsOnColumn_Failure() {
         final Column column = new Column(0, 0);
         final Coordinates coordinates1 = new Coordinates(1, 0, 0);
         final Coordinates coordinates2 = new Coordinates(0, 1, 0);
@@ -56,7 +56,7 @@ public class CoordinatesTest {
     }
 
     @Test
-    public void testEquals_Success(){
+    public void testEquals_Success() {
         final int x = 10;
         final int y = 20;
         final int l = 30;
@@ -77,7 +77,7 @@ public class CoordinatesTest {
     }
 
     @Test
-    public void testGetColumn(){
+    public void testGetColumn() {
         final int x = 10;
         final int y = 20;
         final int layer = 30;
@@ -86,5 +86,50 @@ public class CoordinatesTest {
         final Column expectedColumn = new Column(x, y);
 
         assertThat(coordinates.getColumn(), is(expectedColumn));
+    }
+
+    @Test
+    public void testTranslate_2_0_0() {
+        Coordinates coords = new Coordinates(1, 2, 3);
+        Coordinates translated = coords.translate(2, 0, -1);
+
+        assertThat(coords.getX(), is(1));
+        assertThat(translated, is(new Coordinates(3, 2, 2)));
+        assertThat("Original coordinates must not change", coords, is(new Coordinates(1, 2, 3)));
+        assertNotSame(coords, translated);
+    }
+
+    @Test
+    public void testTranslateX_i2_0_0() {
+        Coordinates coords = new Coordinates(3, 2, 3);
+        Coordinates translated = coords.translate(-2, 2, 1);
+
+        assertThat(translated, is(new Coordinates(1, 4, 4)));
+        assertThat("Original coordinates must not change", coords, is(new Coordinates(3, 2, 3)));
+        assertNotSame(coords, translated);
+    }
+
+
+    @Test
+    public void testTranslateCoords_2_0_0() {
+        Coordinates coords = new Coordinates(1, 2, 3);
+        final Coordinates translation = new Coordinates(2, 0, -1);
+        Coordinates translated = coords.translate(translation);
+
+        assertThat(coords.getX(), is(1));
+        assertThat(translated, is(new Coordinates(3, 2, 2)));
+        assertThat("Original coordinates must not change", coords, is(new Coordinates(1, 2, 3)));
+        assertNotSame(coords, translated);
+    }
+
+    @Test
+    public void testTranslateCoords_i2_0_0() {
+        Coordinates coords = new Coordinates(3, 2, 3);
+        final Coordinates translation = new Coordinates(-2, 2, 1);
+        Coordinates translated = coords.translate(translation);
+
+        assertThat(translated, is(new Coordinates(1, 4, 4)));
+        assertThat("Original coordinates must not change", coords, is(new Coordinates(3, 2, 3)));
+        assertNotSame(coords, translated);
     }
 }

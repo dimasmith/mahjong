@@ -1,15 +1,13 @@
 package net.anatolich.mahjong.desktopclient;
 
+import net.anatolich.mahjong.desktopclient.display.IsometricBoard;
 import net.anatolich.mahjong.desktopclient.dev.CoordinateHighlightListener;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.Window;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.image.BufferStrategy;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
@@ -28,12 +26,13 @@ public class App implements Runnable {
     }
     private IsometricBoard board = new IsometricBoard();
     private JFrame canvas = new JFrame();
+    private GraphicsDevice defaultScreenDevice;
 
     @Override
     public void run() {
 
         final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        final GraphicsDevice defaultScreenDevice = ge.getDefaultScreenDevice();
+        defaultScreenDevice = ge.getDefaultScreenDevice();
         boolean fullScreenSupported = defaultScreenDevice.isFullScreenSupported();
 
         if ( fullScreenSupported ) {
@@ -43,11 +42,12 @@ public class App implements Runnable {
             canvas.setIgnoreRepaint(true);
             defaultScreenDevice.setFullScreenWindow(canvas);
             canvas.setVisible(true);
+            canvas.createBufferStrategy(2);
             repaint();
 
             logger.debug("Registering listeners");
 
-            canvas.addKeyListener(new CloseKeyListener(canvas, this));
+            canvas.addKeyListener(new CloseKeyListener(this));
             canvas.addMouseMotionListener(new CoordinateHighlightListener(( Graphics2D ) canvas.getGraphics()));
 
             logger.debug("Main window initialized");
@@ -58,20 +58,32 @@ public class App implements Runnable {
     }
 
     private void repaint() {
-        Graphics2D g2 = ( Graphics2D ) canvas.getGraphics();
+        BufferStrategy bufferStrategy = canvas.getBufferStrategy();
+        Graphics2D g2 = ( Graphics2D ) bufferStrategy.getDrawGraphics();
+
         board.setHeight(canvas.getHeight());
         board.setWidth(canvas.getWidth());
+
         board.draw(g2);
-        logger.debug("Repainted");
+        logger.debug("Drawed to back buffer");
+
+        bufferStrategy.show();
+        logger.debug("Back buffer rendered");
+
+        g2.dispose();
+        logger.debug("Graphics disposed");
+    }
+
+    public void close() {
+        defaultScreenDevice.setFullScreenWindow(null);
+        canvas.dispose();
     }
 
     private static class CloseKeyListener extends KeyAdapter {
 
-        private final Window window;
         private final App app;
 
-        public CloseKeyListener( Window window, App app ) {
-            this.window = window;
+        public CloseKeyListener( App app ) {
             this.app = app;
         }
 
@@ -79,7 +91,7 @@ public class App implements Runnable {
         public void keyTyped( KeyEvent e ) {
             logger.debug("keyTyped: {}", e);
             if ( e.getKeyCode() == KeyEvent.VK_ESCAPE ) {
-                window.dispose();
+                app.close();
             }
 
         }
@@ -88,7 +100,7 @@ public class App implements Runnable {
         public void keyPressed( KeyEvent e ) {
             logger.debug("keyPressed: {}", e);
             if ( e.getKeyCode() == KeyEvent.VK_ESCAPE ) {
-                window.dispose();
+                app.close();
             }
 
             if ( e.getKeyCode() == KeyEvent.VK_F5 ) {

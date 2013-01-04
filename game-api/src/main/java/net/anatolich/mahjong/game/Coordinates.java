@@ -70,4 +70,12 @@ public class Coordinates {
         }
         return true;
     }
+
+    public Coordinates translate( int tx, int ty, int tz ) {
+        return new Coordinates(x + tx, y + ty, layer + tz);
+    }
+
+    public Coordinates translate( Coordinates translation ) {
+        return new Coordinates(x + translation.getX(), y + translation.getY(), layer + translation.getLayer());
+    }
 }
