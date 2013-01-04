@@ -29,10 +29,6 @@ public class TilePainter {
             this.translation = translation;
         }
 
-        public Coordinates getTranslation() {
-            return translation;
-        }
-
         public Coordinates translate(Coordinates base){
             return base.translate(translation);
         }
