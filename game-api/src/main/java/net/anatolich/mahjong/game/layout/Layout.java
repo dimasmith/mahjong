@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.anatolich.mahjong.game.Column;
 import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.InvalidLayerException;
+import net.anatolich.mahjong.game.Slot;
 
 /**
  * Holds bunch of slots that can be filled with tiles.
@@ -35,6 +37,7 @@ public final class Layout {
 
         validateLayerGaps();
         validateTilesGap(topLayer, layerColumns);
+        validateSlotsIntersection();
 
     }
 
@@ -127,5 +130,24 @@ public final class Layout {
             maxLayer = Math.max(maxLayer, coordinates.getLayer());
         }
         return new Coordinates(maxX, maxY, maxLayer);
+    }
+
+    private void validateSlotsIntersection() {
+        List<Slot> checkedSlots = new ArrayList<>();
+
+        for ( Coordinates coordinates : slots ) {
+            checkedSlots.add(new Slot(coordinates));
+        }
+        Iterator<Slot> baseSlotIterator = checkedSlots.iterator();
+        while ( baseSlotIterator.hasNext() ) {
+            Slot baseSlot = baseSlotIterator.next();
+            baseSlotIterator.remove();
+
+            for ( Slot checkedSlot : checkedSlots) {
+                if (baseSlot.intersectsWith(checkedSlot) ){
+                    throw new IntersectingSlotsException(baseSlot, checkedSlot);
+                }
+            }
+        }
     }
 }

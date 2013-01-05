@@ -32,7 +32,7 @@ public class LayoutTest {
         slots.add(coordinates1);
         slots.add(coordinates2);
 
-        try{
+        try {
             new Layout(slots);
         } catch ( EmptyLayerException ex ) {
             assertThat(ex.getEmptyLayer(), is(emptyLayer));
@@ -41,7 +41,7 @@ public class LayoutTest {
 
     }
 
-    @Test(expected = HangingSlotException.class)
+    @Test( expected = HangingSlotException.class )
     public void testValidate_DirectColumnGap() {
         final Set<Coordinates> slots = new HashSet<>();
 
@@ -139,7 +139,7 @@ public class LayoutTest {
     }
 
     @Test
-    public void testGetBounds(){
+    public void testGetBounds() {
         List<Coordinates> slotCoords = new ArrayList<>();
 
         slotCoords.add(new Coordinates(2, 2, 0));
@@ -154,12 +154,12 @@ public class LayoutTest {
         Coordinates lowerBound = layout.getLowerBound();
         Coordinates upperBound = layout.getUpperBound();
 
-        assertThat(lowerBound, is(new Coordinates(2,2,0)));
-        assertThat(upperBound, is(new Coordinates(12,16, 2)));
+        assertThat(lowerBound, is(new Coordinates(2, 2, 0)));
+        assertThat(upperBound, is(new Coordinates(12, 16, 2)));
     }
 
-    @Test
-    public void testValidate_OverlappingSlots(){
+    @Test( expected = IntersectingSlotsException.class )
+    public void testValidate_OverlappingSlots() {
         final Set<Coordinates> slots = new HashSet<>();
         final int checkedLayer = 0;
 
@@ -169,8 +169,6 @@ public class LayoutTest {
         slots.add(coordinates1);
         slots.add(coordinates2);
 
-        Layout layout = new Layout(slots);
-        List<Column> columnsByLayer = layout.getLayerSlots(checkedLayer);
-
+        new Layout(slots); // Must throw IntersectingSlotsException
     }
 }
