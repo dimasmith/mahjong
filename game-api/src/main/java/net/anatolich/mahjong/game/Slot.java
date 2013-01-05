@@ -12,6 +12,8 @@ import java.util.Objects;
  */
 public final class Slot {
 
+    public static final int SLOT_WIDTH = 2;
+    public static final int SLOT_LENGTH = 2;
     private final Coordinates coordinates;
     private Tile tile;
 
@@ -25,6 +27,15 @@ public final class Slot {
         }
         this.coordinates = coordinates;
         this.tile = tile;
+    }
+
+    public boolean intersectsWith( Slot otherSlot ) {
+        Coordinates otherSlotCoordinates = otherSlot.getCoordinates();
+
+        int dX = Math.abs(otherSlotCoordinates.getX() - coordinates.getX());
+        int dY = Math.abs(otherSlotCoordinates.getY() - coordinates.getY());
+
+        return dX < SLOT_WIDTH && dY < SLOT_LENGTH && ( coordinates.getLayer() == otherSlotCoordinates.getLayer() );
     }
 
     public boolean isEmpty() {
@@ -63,7 +74,7 @@ public final class Slot {
             return false;
         }
         final Slot other = ( Slot ) obj;
-        if ( !Objects.equals(this.coordinates, other.coordinates) ) {
+        if ( !Objects.equals(this.coordinates, other.getCoordinates()) ) {
             return false;
         }
         return true;

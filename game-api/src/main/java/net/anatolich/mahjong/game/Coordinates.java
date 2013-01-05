@@ -21,11 +21,11 @@ public class Coordinates {
         this(column.getX(), column.getY(), layer);
     }
 
-    public boolean isOnColumn(Column column){
+    public boolean isOnColumn( Column column ) {
         return column.getX() == x && column.getY() == y;
     }
 
-    public Column getColumn(){
+    public Column getColumn() {
         return new Column(x, y);
     }
 
@@ -77,5 +77,10 @@ public class Coordinates {
 
     public Coordinates translate( Coordinates translation ) {
         return new Coordinates(x + translation.getX(), y + translation.getY(), layer + translation.getLayer());
+    }
+
+    @Override
+    public String toString() {
+        return "Coordinates{" + "x=" + x + ", y=" + y + ", layer=" + layer + '}';
     }
 }
