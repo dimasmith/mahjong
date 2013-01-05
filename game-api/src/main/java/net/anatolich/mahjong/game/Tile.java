@@ -50,7 +50,7 @@ public class Tile {
      *
      * @throws InvalidTileException when tile type does not fit to tile value.
      */
-    Tile( Type type, Value value ) {
+    public Tile( Type type, Value value ) {
         if ( !type.isValidForValue(value) ) {
             throw new InvalidTileException(type, value);
         }
