@@ -1,5 +1,6 @@
 package net.anatolich.mahjong.game;
 
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -38,6 +39,10 @@ public class Tile {
         public boolean isValidForValue( Value value ) {
             return supportedValues.contains(value);
         }
+
+        public Set<Value> getSupportedValues() {
+            return Collections.unmodifiableSet(supportedValues);
+        }
     }
     private final Type type;
     private final Value value;
@@ -50,7 +55,7 @@ public class Tile {
      *
      * @throws InvalidTileException when tile type does not fit to tile value.
      */
-    Tile( Type type, Value value ) {
+    public Tile( Type type, Value value ) {
         if ( !type.isValidForValue(value) ) {
             throw new InvalidTileException(type, value);
         }
