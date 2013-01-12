@@ -1,32 +1,27 @@
-package net.anatolich.mahjong.game;
+package net.anatolich.mahjong.game.layout;
 
+import java.io.Serializable;
 import java.util.Objects;
+import net.anatolich.mahjong.game.Coordinates;
 
 /**
- * Slot is a coordinate-based holder for tiles on board.
- * Slots are placed on board according to layout. At the beginning of the game slots are filled with tiles.
- * On successful move slots that are involved in move are removed from board.
- * When board became shuffled all slots are cleared and than refilled with tiles in random order.
- *
+ * Marks place in layout where it is appropriate to put pieces.
  * @author Dmytro Kovalchuk<dimasmith@gmail.com>
  */
-public final class Slot {
+public final class Slot implements Serializable {
+
+    private static final long serialVersionUID = 0x1L;
 
     public static final int SLOT_WIDTH = 2;
     public static final int SLOT_LENGTH = 2;
+
     private final Coordinates coordinates;
-    private Tile tile;
 
     public Slot( Coordinates coordinates ) {
-        this(coordinates, null);
-    }
-
-    public Slot( Coordinates coordinates, Tile tile ) {
-        if ( coordinates == null ) {
-            throw new IllegalArgumentException("coordinates parameter must not be null");
+        if (coordinates == null){
+            throw new IllegalArgumentException("coordinates argument must not be null");
         }
         this.coordinates = coordinates;
-        this.tile = tile;
     }
 
     public boolean intersectsWith( Slot otherSlot ) {
@@ -38,24 +33,8 @@ public final class Slot {
         return dX < SLOT_WIDTH && dY < SLOT_LENGTH && ( coordinates.getLayer() == otherSlotCoordinates.getLayer() );
     }
 
-    public boolean isEmpty() {
-        return tile == null;
-    }
-
     public Coordinates getCoordinates() {
         return coordinates;
-    }
-
-    public void setTile( Tile tile ) {
-        this.tile = tile;
-    }
-
-    public void removeTile() {
-        this.tile = null;
-    }
-
-    public Tile getTile() {
-        return tile;
     }
 
     @Override

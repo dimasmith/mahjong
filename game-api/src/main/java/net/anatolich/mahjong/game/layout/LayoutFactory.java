@@ -11,7 +11,7 @@ import net.anatolich.mahjong.game.Coordinates;
  */
 public class LayoutFactory {
 
-    public Layout getDefaultLayout() {
+    public LayoutImpl getDefaultLayout() {
         List<Coordinates> slotCoords = new ArrayList<>();
 
         addRow(2, 12, 0, 0, slotCoords);
@@ -48,7 +48,7 @@ public class LayoutFactory {
 
         slotCoords.add(new Coordinates(13, 9, 4));
 
-        Layout layout = new Layout(slotCoords);
+        LayoutImpl layout = new LayoutImpl(slotCoords);
         return layout;
     }
 

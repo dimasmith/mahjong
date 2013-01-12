@@ -1,7 +1,5 @@
 package net.anatolich.mahjong.game.layout;
 
-import net.anatolich.mahjong.game.Slot;
-
 /**
  *
  * @author Dmytro Kovalchuk<dimasmith@gmail.com>

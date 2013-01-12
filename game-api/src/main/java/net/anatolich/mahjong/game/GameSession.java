@@ -1,6 +1,6 @@
 package net.anatolich.mahjong.game;
 
-import net.anatolich.mahjong.game.layout.Layout;
+import net.anatolich.mahjong.game.layout.LayoutImpl;
 import net.anatolich.mahjong.game.layout.LayoutFactory;
 
 /**
@@ -15,9 +15,9 @@ public class GameSession {
     private GameSession() {
         board = new Board();
 
-        Layout layout = new LayoutFactory().getDefaultLayout();
+        LayoutImpl layout = new LayoutFactory().getDefaultLayout();
 
-        
+
     }
 
     public static GameSession startGame() {

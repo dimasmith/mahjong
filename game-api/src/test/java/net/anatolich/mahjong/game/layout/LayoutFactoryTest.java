@@ -15,7 +15,7 @@ public class LayoutFactoryTest {
         LayoutFactory factory = new LayoutFactory();
         Layout layout = factory.getDefaultLayout();
 
-        assertThat(layout.getTopLayer(), is(4));
-        assertThat(layout.getSlotsCount(), is(144));
+        assertThat(layout.getUpperBound().getLayer(), is(4));
+        assertThat(layout.getSlots().size(), is(144));
     }
 }
