@@ -33,4 +33,12 @@ public class CoordinateMapper {
         double y = yCoef * gameCoordinates.getY() - z;
         return new Point2D.Double(x, y);
     }
+
+    public double getLengthAlongX( int length ) {
+        return xCoef * length;
+    }
+
+    public double getLengthAlongY( int length ) {
+        return yCoef * length;
+    }
 }

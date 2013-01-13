@@ -8,8 +8,9 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import net.anatolich.mahjong.game.BoardView;
+import net.anatolich.mahjong.game.Board;
 import net.anatolich.mahjong.game.Column;
+import net.anatolich.mahjong.game.Coordinates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,8 +22,9 @@ import org.slf4j.LoggerFactory;
 public class IsometricBoard {
 
     private static final Logger logger = LoggerFactory.getLogger(IsometricBoard.class);
-    private BoardView board;
+    private Board board;
     private int height, width;
+
 
     public IsometricBoard( int height, int width ) {
         this.height = height;
@@ -36,17 +38,24 @@ public class IsometricBoard {
 
         clearBoard(g);
 
-        drawGrid(( Graphics2D ) g.create());
+        drawGrid(createGraphics(g));
 
-//        board.getAllTiles();
+        TileShape tileShape = new TileShape(2, 2, 0);
+        tileShape.draw(createGraphics(g));
+
+        TileShape tileShape2 = new TileShape(2, 2, 1);
+        tileShape2.draw(createGraphics(g));
+
+        TileShape tileShape3 = new TileShape(2, 2, 2);
+        tileShape3.draw(createGraphics(g));
 
     }
 
-    public BoardView getBoard() {
+    public Board getBoard() {
         return board;
     }
 
-    public void setBoard( BoardView board ) {
+    public void setBoard( Board board ) {
         this.board = board;
     }
 
@@ -95,18 +104,19 @@ public class IsometricBoard {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    private Graphics2D createGraphics( Graphics2D g ) {
+        return ( Graphics2D ) g.create();
+    }
+
     public static class TileShape {
 
-        public static final double L_X_SHIFT = 12.5;
-        public static final double L_Y_SHIFT = -12.5;
-        public static final double WIDTH = 50;
-        public static final double HEIGHT = 75;
-        private final double gX, gY;
+        private final CoordinateMapper coordinateMapper = new CoordinateMapper(10);
+
         private Point2D a, b, c, d, e, f;
+        private final Coordinates baseCoordinates;
 
         private TileShape( int x, int y, int layer ) {
-            this.gX = x * WIDTH + ( layer * L_X_SHIFT );
-            this.gY = y * HEIGHT + ( layer * L_Y_SHIFT );
+            this.baseCoordinates = new Coordinates(x, y, layer);
         }
 
         public void draw( Graphics2D g2 ) {
@@ -114,12 +124,19 @@ public class IsometricBoard {
             g2.setStroke(new BasicStroke(1.0f));
 
             GeneralPath.Double footprintPath = new Path2D.Double();
-            a = new Point2D.Double(gX, gY);
-            b = new Point2D.Double(gX + L_X_SHIFT, gY + L_Y_SHIFT);
-            c = new Point2D.Double(gX + L_X_SHIFT + WIDTH, gY + L_Y_SHIFT);
-            d = new Point2D.Double(gX + L_X_SHIFT + WIDTH, gY + L_Y_SHIFT + HEIGHT);
-            e = new Point2D.Double(gX + WIDTH, gY + HEIGHT);
-            f = new Point2D.Double(gX, gY + HEIGHT);
+            final Coordinates aC = baseCoordinates;
+            final Coordinates bC = aC.translate(0, 0, 1);
+            final Coordinates cC = bC.translate(2, 0, 0);
+            final Coordinates dC = cC.translate(0, 2, 0);
+            final Coordinates eC = dC.translate(0, 0, -1);
+            final Coordinates fC = eC.translate(-2, 0, 0);
+
+            a = coordinateMapper.mapTo2D(aC);
+            b = coordinateMapper.mapTo2D(bC);
+            c = coordinateMapper.mapTo2D(cC);
+            d = coordinateMapper.mapTo2D(dC);
+            e = coordinateMapper.mapTo2D(eC);
+            f = coordinateMapper.mapTo2D(fC);
 
             footprintPath.moveTo(a.getX(), a.getY());
             footprintPath.lineTo(b.getX(), b.getY());
@@ -129,17 +146,19 @@ public class IsometricBoard {
             footprintPath.lineTo(f.getX(), f.getY());
             footprintPath.closePath();
 
-            Point2D point = new Point2D.Double(f.getX() + L_X_SHIFT, f.getY() + L_Y_SHIFT);
+            Point2D edgePoint = coordinateMapper.mapTo2D(fC.translate(0, 0, 1));
 
             g2.setColor(Color.WHITE);
             g2.fill(footprintPath);
             g2.setColor(Color.BLACK);
             g2.draw(footprintPath);
 
-            Line2D line = new Line2D.Double(f, point);
-            g2.draw(line);
+            Line2D edgeLine = new Line2D.Double(f, edgePoint);
+            g2.draw(edgeLine);
 
-            final Rectangle2D.Double topPane = new Rectangle2D.Double(b.getX(), b.getY(), WIDTH, HEIGHT);
+            double tileWidth = coordinateMapper.getLengthAlongX(2);
+            double tileHeight = coordinateMapper.getLengthAlongY(2);
+            final Rectangle2D.Double topPane = new Rectangle2D.Double(b.getX(), b.getY(), tileWidth, tileHeight);
             g2.setColor(Color.LIGHT_GRAY);
             g2.fill(topPane);
 
@@ -150,11 +169,11 @@ public class IsometricBoard {
         }
 
         public double getHeight(){
-            return HEIGHT;
+            return coordinateMapper.getLengthAlongY(2);
         }
 
         public double getWidth(){
-            return WIDTH;
+            return coordinateMapper.getLengthAlongX(2);
         }
     }
 }

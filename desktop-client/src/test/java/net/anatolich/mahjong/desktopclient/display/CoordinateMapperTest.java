@@ -63,6 +63,22 @@ public class CoordinateMapperTest {
         assertPointEquals(c, mapperPixelRatio20.mapTo2D(c), x, y);
     }
 
+    @Test
+    public void testGetLengthAlongX(){
+        final double expectedLength = 60;
+        double length = mapperPixelRatio10.getLengthAlongX(2);
+        assertEquals(expectedLength, length, 0.5);
+
+    }
+
+    @Test
+    public void testGetLengthAlongY(){
+        final double expectedLength = 80;
+        double length = mapperPixelRatio10.getLengthAlongY(2);
+        assertEquals(expectedLength, length, 0.5);
+
+    }
+
     private void assertPointEquals( final Coordinates coordinates, Point2D actualPoint, final double expectedX,
                                     final double expectedY ) {
         assertEquals("Bad mapping for X coordinate " + coordinates, expectedX, actualPoint.getX(), 0.5);
