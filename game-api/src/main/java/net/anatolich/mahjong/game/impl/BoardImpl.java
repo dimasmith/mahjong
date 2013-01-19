@@ -50,7 +50,7 @@ public class BoardImpl implements Board {
         return pieces.get(coordinates);
     }
 
-    void putPiece( Piece piece ) {
+    public void putPiece( Piece piece ) {
         pieces.put(piece.getCoordinates(), piece);
     }
 }

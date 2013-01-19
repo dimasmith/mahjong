@@ -42,11 +42,11 @@ public class LayoutFactory {
 
         addRow(2, 12, 14, 0, slotCoords);
 
-        slotCoords.add(new Coordinates(0, 9, 0));
-        slotCoords.add(new Coordinates(26, 9, 0));
-        slotCoords.add(new Coordinates(28, 9, 0));
+        slotCoords.add(new Coordinates(0, 7, 0));
+        slotCoords.add(new Coordinates(26, 7, 0));
+        slotCoords.add(new Coordinates(28, 7, 0));
 
-        slotCoords.add(new Coordinates(13, 9, 4));
+        slotCoords.add(new Coordinates(13, 7, 4));
 
         LayoutImpl layout = new LayoutImpl(slotCoords);
         return layout;
