@@ -4,10 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import net.anatolich.mahjong.desktopclient.assets.PiecesTileMap;
 import net.anatolich.mahjong.game.Board;
-import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.Piece;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,16 +21,13 @@ public class IsometricBoardRenderer {
     private static final Logger logger = LoggerFactory.getLogger(IsometricBoardRenderer.class);
     private Board board;
     private int height, width;
-
-    public IsometricBoardRenderer( int width, int height ) {
-        this.height = height;
-        this.width = width;
-    }
+    private final PiecesTileMap tileMap;
 
     public IsometricBoardRenderer( Board board ) {
         this.board = board;
         this.width = 16;
         this.height = 16;
+        this.tileMap = new PiecesTileMap();
     }
 
     public void draw( Graphics2D g ) {
@@ -42,7 +38,9 @@ public class IsometricBoardRenderer {
         Collections.sort(pieces, new IsometricCoordinateComparator());
 
         for ( Piece piece : pieces ) {
-            new TileShape(piece).draw(g);
+            final TileShape tileShape = new TileShape(piece);
+            tileShape.setPiecesTileMap(tileMap);
+            tileShape.draw(g);
         }
 
     }

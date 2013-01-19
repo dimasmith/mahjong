@@ -8,6 +8,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import net.anatolich.mahjong.desktopclient.assets.PiecesTileMap;
 import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.Piece;
 
@@ -16,6 +17,7 @@ import net.anatolich.mahjong.game.Piece;
  * @author Dmytro Kovalchuk<dimasmith@gmail.com>
  */
 public class TileShape {
+
     private final Piece piece;
     private final CoordinateMapper coordinateMapper = new CoordinateMapper(10);
     private Point2D a;
@@ -25,6 +27,7 @@ public class TileShape {
     private Point2D e;
     private Point2D f;
     private final Coordinates baseCoordinates;
+    private PiecesTileMap piecesTileMap;
 
     public TileShape( Piece piece ) {
         this.piece = piece;
@@ -62,13 +65,7 @@ public class TileShape {
         g2.draw(footprintPath);
         Line2D edgeLine = new Line2D.Double(f, edgePoint);
         g2.draw(edgeLine);
-        double tileWidth = coordinateMapper.getLengthAlongX(2);
-        double tileHeight = coordinateMapper.getLengthAlongY(2);
-        final Rectangle2D.Double topPane = new Rectangle2D.Double(b.getX(), b.getY(), tileWidth, tileHeight);
-        g2.setColor(Color.LIGHT_GRAY);
-        g2.fill(topPane);
-        g2.setColor(Color.BLACK);
-        g2.draw(topPane);
+        paintTopPane(g2);
         g2.dispose();
     }
 
@@ -80,4 +77,24 @@ public class TileShape {
         return coordinateMapper.getLengthAlongX(2);
     }
 
+    private void paintTopPane( Graphics2D g2 ) {
+        double tileWidth = coordinateMapper.getLengthAlongX(2);
+        double tileHeight = coordinateMapper.getLengthAlongY(2);
+        final Rectangle2D.Double topPane = new Rectangle2D.Double(b.getX(), b.getY(), tileWidth, tileHeight);
+        g2.setColor(Color.LIGHT_GRAY);
+        g2.fill(topPane);
+
+        g2.drawImage(piecesTileMap.getPieceImage(piece.getTile()), ( int ) b.getX(), ( int ) b.getY(), null);
+        
+        g2.setColor(Color.BLACK);
+        g2.draw(topPane);
+    }
+
+    public PiecesTileMap getPiecesTileMap() {
+        return piecesTileMap;
+    }
+
+    public void setPiecesTileMap( PiecesTileMap piecesTileMap ) {
+        this.piecesTileMap = piecesTileMap;
+    }
 }
