@@ -46,6 +46,7 @@ public class BoardImpl implements Board {
         return pieces.get(new Coordinates(x, y, topLayer));
     }
 
+    @Override
     public Piece getPieceAt( Coordinates coordinates ) {
         return pieces.get(coordinates);
     }

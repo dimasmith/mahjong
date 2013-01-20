@@ -111,10 +111,10 @@ public class DefaultTileSetTest {
             }
         }
 
-        assertThat(winters, is(4));
-        assertThat(springs, is(4));
-        assertThat(summers, is(4));
-        assertThat(autumns, is(4));
+        assertThat(winters, is(1));
+        assertThat(springs, is(1));
+        assertThat(summers, is(1));
+        assertThat(autumns, is(1));
     }
 
     @Test
@@ -145,10 +145,10 @@ public class DefaultTileSetTest {
             }
         }
 
-        assertThat(plums, is(4));
-        assertThat(orchids, is(4));
-        assertThat(chrysantemums, is(4));
-        assertThat(bamboos, is(4));
+        assertThat(plums, is(1));
+        assertThat(orchids, is(1));
+        assertThat(chrysantemums, is(1));
+        assertThat(bamboos, is(1));
     }
 
     @Test
@@ -326,5 +326,10 @@ public class DefaultTileSetTest {
         assertThat(seven, is(4));
         assertThat(eight, is(4));
         assertThat(nine, is(4));
+    }
+
+    @Test
+    public void testTileSetSize(){
+        assertThat(tiles.size(), is(144));
     }
 }

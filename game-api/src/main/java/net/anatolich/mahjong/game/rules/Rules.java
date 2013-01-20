@@ -1,5 +1,7 @@
 package net.anatolich.mahjong.game.rules;
 
+import net.anatolich.mahjong.game.Board;
+import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.Piece;
 
 /**
@@ -11,7 +13,20 @@ import net.anatolich.mahjong.game.Piece;
  */
 public interface Rules {
 
-    boolean isPieceOpen( Piece piece );
+    /**
+     * Determines whether piece on board can be selected or it is blocked by neighbor tile.
+     * @param piece piece to be checked.
+     * @param board game board.
+     * @return true if piece is selectable.
+     */
+    boolean isPieceOpen( Coordinates piece, Board board);
 
-    boolean isMoveLegal( Piece startPiece, Piece endPiece);
+    /**
+     * Determines whether move involving two pieces is legal or not.
+     * @param startPiece piece selected first.
+     * @param endPiece piece selected second.
+     * @param board game board.
+     * @return true if move is allowed.
+     */
+    boolean isMoveLegal( Coordinates startPiece, Coordinates endPiece, Board board);
 }

@@ -18,12 +18,21 @@ public final class DefaultTileSet implements TileSet {
 
     public DefaultTileSet() {
         this.tiles = new ArrayList<>();
-        final EnumSet<Type> tileTypes = EnumSet.allOf(Tile.Type.class);
-        for ( Type type : tileTypes ) {
+
+        final EnumSet<Type> oneTimeTypes = EnumSet.<Type>of(Type.FLOWERS, Type.SEASONS);
+        for ( Type type : oneTimeTypes ) {
+            for ( Tile.Value value : type.getSupportedValues()) {
+                this.tiles.add(new Tile(type, value));
+            }
+        }
+
+        final EnumSet<Type> fourTimesTypes = EnumSet.complementOf(oneTimeTypes);
+        for ( Type type : fourTimesTypes ) {
             for ( Tile.Value value : type.getSupportedValues() ) {
                 addFourTiles(new Tile(type, value));
             }
         }
+
     }
 
     @Override
