@@ -1,5 +1,6 @@
 package net.anatolich.mahjong.game.layout;
 
+import net.anatolich.mahjong.game.Layout;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 import net.anatolich.mahjong.game.Column;
 import net.anatolich.mahjong.game.Coordinates;
-import net.anatolich.mahjong.game.InvalidLayerException;
 
 /**
  * Holds bunch of slots that can be filled with tiles.
@@ -25,8 +25,10 @@ public final class LayoutImpl implements Layout {
     private final int topLayer;
     private final Coordinates lowerBound;
     private final Coordinates upperBound;
+    private final String name;
+    private final String description;
 
-    public LayoutImpl( Collection<Coordinates> coordinates ) {
+    public LayoutImpl( String name, String description, Collection<Coordinates> coordinates) {
         if ( coordinates == null ) {
             throw new IllegalArgumentException("slots parameter cannot be null");
         }
@@ -48,6 +50,9 @@ public final class LayoutImpl implements Layout {
         upperBound = calculateUpperBound();
         lowerBound = calculateLowerBound();
 
+        this.name = name;
+        this.description = description;
+
     }
 
     @Override
@@ -63,6 +68,16 @@ public final class LayoutImpl implements Layout {
     @Override
     public Collection<Slot> getSlots() {
         return slots;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
     }
 
     private Map<Integer, List<Column>> mapSlotsToColumnLayers() {
@@ -155,4 +170,5 @@ public final class LayoutImpl implements Layout {
         }
         return new Coordinates(maxX, maxY, maxLayer);
     }
+
 }

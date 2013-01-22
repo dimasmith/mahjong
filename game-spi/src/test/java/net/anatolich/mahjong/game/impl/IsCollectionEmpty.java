@@ -1,4 +1,4 @@
-package net.anatolich.testing.matchers;
+package net.anatolich.mahjong.game.impl;
 
 import java.util.Collection;
 import org.hamcrest.Description;

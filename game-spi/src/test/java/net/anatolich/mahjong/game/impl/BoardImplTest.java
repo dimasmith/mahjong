@@ -4,13 +4,14 @@ import java.util.List;
 import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.Piece;
 import net.anatolich.mahjong.game.Tile;
-import net.anatolich.testing.matchers.IsCollectionEmpty;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static net.anatolich.mahjong.game.impl.IsCollectionEmpty.*;
 import static org.hamcrest.CoreMatchers.*;
-import static net.anatolich.testing.matchers.IsCollectionEmpty.*;
+
+import static org.junit.Assert.*;
+
 
 /**
  *

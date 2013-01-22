@@ -48,7 +48,7 @@ public class LayoutFactory {
 
         slotCoords.add(new Coordinates(13, 7, 4));
 
-        LayoutImpl layout = new LayoutImpl(slotCoords);
+        LayoutImpl layout = new LayoutImpl("Default", "", slotCoords);
         return layout;
     }
 

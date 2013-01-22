@@ -1,5 +1,6 @@
 package net.anatolich.mahjong.game.layout;
 
+import net.anatolich.mahjong.game.Layout;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;

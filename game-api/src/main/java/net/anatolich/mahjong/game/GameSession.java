@@ -1,38 +1,23 @@
 package net.anatolich.mahjong.game;
 
-import java.util.Iterator;
-import net.anatolich.mahjong.game.impl.BoardImpl;
-import net.anatolich.mahjong.game.impl.DefaultTileSet;
-import net.anatolich.mahjong.game.layout.LayoutImpl;
-import net.anatolich.mahjong.game.layout.LayoutFactory;
-import net.anatolich.mahjong.game.layout.Slot;
+import java.util.List;
 
 /**
- * Game session keeps track of game and allows player to interact with game.
- *
+ * Controls game session from start to end.
  * @author Dmytro Kovalchuk<dimasmith@gmail.com>
  */
-public class GameSession {
+public interface GameSession {
 
-    private final BoardImpl board;
+    Board getBoard();
 
-    private GameSession() {
-        board = new BoardImpl();
-        LayoutImpl layout = new LayoutFactory().getDefaultLayout();
-        TileSet tileSet = new DefaultTileSet();
-        Iterator<Tile> tileIterator = tileSet.getTiles().iterator();
-        for ( Slot slot : layout.getSlots()) {
-            Tile tile = tileIterator.next();
-            board.putPiece(new Piece(tile, slot.getCoordinates()));
-        }
+    List<Piece> getPickedPieces();
 
-    }
+    boolean wasMoveCompleted();
 
-    public static GameSession startGame() {
-        return new GameSession();
-    }
+    void pickPieceAt(Coordinates coordinates);
 
-    public Board getBoard() {
-        return board;
-    }
+    boolean hasMoreMoves();
+
+    boolean isGameEnded();
+
 }

@@ -2,9 +2,12 @@ package net.anatolich.mahjong.desktopclient.display;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.Collections;
+import java.util.List;
 import javax.swing.JComponent;
 import net.anatolich.mahjong.game.Board;
-import net.anatolich.mahjong.game.GameSession;
+import net.anatolich.mahjong.game.Coordinates;
+import net.anatolich.mahjong.game.Piece;
 
 /**
  *
@@ -15,8 +18,7 @@ public class BoardComponent extends JComponent {
     private Board board;
 
     public BoardComponent() {
-        GameSession session = GameSession.startGame();
-        this.board = session.getBoard();
+        this.board = new EmptyBoard();
     }
 
     @Override
@@ -35,5 +37,24 @@ public class BoardComponent extends JComponent {
 
     public void setBoard( Board board ) {
         this.board = board;
+    }
+
+    private static class EmptyBoard implements Board {
+
+        @Override
+        public List<Piece> getAllPieces() {
+            return Collections.EMPTY_LIST;
+        }
+
+        @Override
+        public Piece getTopmostPieceAt( int x, int y ) {
+            return null;
+        }
+
+        @Override
+        public Piece getPieceAt( Coordinates coordinates ) {
+            return null;
+        }
+
     }
 }

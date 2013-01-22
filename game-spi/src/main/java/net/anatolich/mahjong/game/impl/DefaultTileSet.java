@@ -1,12 +1,12 @@
 package net.anatolich.mahjong.game.impl;
 
+import net.anatolich.mahjong.game.spi.TileSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import net.anatolich.mahjong.game.Tile;
 import net.anatolich.mahjong.game.Tile.Type;
-import net.anatolich.mahjong.game.TileSet;
 
 /**
  *

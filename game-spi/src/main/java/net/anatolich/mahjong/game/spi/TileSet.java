@@ -1,6 +1,7 @@
-package net.anatolich.mahjong.game;
+package net.anatolich.mahjong.game.spi;
 
 import java.util.List;
+import net.anatolich.mahjong.game.Tile;
 
 /**
  * Contains set of tiles to be used in game.

@@ -9,8 +9,10 @@
     <url>https://github.com/dimasmith/mahjong</url>
     <modules>
         <module>game-api</module>
-    <module>desktop-client</module>
-  </modules>
+        <module>desktop-client</module>
+        <module>game-spi</module>
+        <module>mahjong-game-impl</module>
+    </modules>
 
     <build>
         <plugins>

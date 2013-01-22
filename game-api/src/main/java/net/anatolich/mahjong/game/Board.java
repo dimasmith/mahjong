@@ -3,7 +3,7 @@ package net.anatolich.mahjong.game;
 import java.util.List;
 
 /**
- * View interface for board. One can only query board state through it but cannot modify it's state
+ * Board where pieces are placed.
  * @author Dmytro Kovalchuk<dimasmith@gmail.com>
  */
 public interface Board {
