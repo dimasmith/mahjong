@@ -26,12 +26,8 @@ public class TileMap {
     }
 
     public BufferedImage getTile( int number ) {
-        log.debug("getting tile no {}", number);
-
         final int x = number % width;
         final int y = number / width;
-
-        log.debug("getting tile on {} {}", x, y);
 
         BufferedImage tile = image.getSubimage(x * size, y * size, size, size);
         return tile;
