@@ -1,4 +1,4 @@
-package net.anatolich.mahjong.game.rules.impl;
+package net.anatolich.mahjong.mahjong;
 
 import java.util.ArrayList;
 import java.util.Arrays;

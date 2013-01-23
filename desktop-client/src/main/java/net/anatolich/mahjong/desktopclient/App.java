@@ -1,7 +1,10 @@
 package net.anatolich.mahjong.desktopclient;
 
+import java.util.List;
 import javax.swing.SwingUtilities;
 import net.anatolich.mahjong.desktopclient.display.GameWindow;
+import net.anatolich.mahjong.game.Game;
+import net.anatolich.mahjong.game.GameFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +23,16 @@ public class App implements Runnable {
 
     @Override
     public void run() {
+
+        final GameFactory gameFactory = new GameFactory();
+        List<Game> availableGames = gameFactory.availableGames();
+
+        for ( Game game : availableGames ) {
+            logger.debug("Loading game: {}", game.getName());
+        }
+
+        gameWindow.setAvailableGames(availableGames);
+
         gameWindow.setVisible(true);
 
     }

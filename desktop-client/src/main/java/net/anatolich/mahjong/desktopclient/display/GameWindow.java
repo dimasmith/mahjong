@@ -2,11 +2,14 @@ package net.anatolich.mahjong.desktopclient.display;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import net.anatolich.mahjong.game.Game;
+import net.anatolich.mahjong.game.GameSession;
 
 /**
  *
@@ -49,6 +52,34 @@ public class GameWindow extends JFrame {
         setJMenuBar(menuBar);
         pack();
         setExtendedState(MAXIMIZED_BOTH);
+    }
+
+    void startGame(GameSession session){
+        boardComponent.setBoard(session.getBoard());
+        boardComponent.repaint();
+    }
+
+    public void setAvailableGames( List<Game> availableGames ) {
+        for ( Game game : availableGames ) {
+            gameMenu.add(new PlayGameAction(game));
+        }
+    }
+
+    private class PlayGameAction extends AbstractAction {
+        private final Game game;
+
+        public PlayGameAction( Game game ) {
+            this.game = game;
+            putValue(NAME, String.format("Play %s", game.getName()));
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e ) {
+            final GameSession gameSession = game.startGame();
+            startGame(gameSession);
+        }
+
+
     }
 
     private static class ExitAction extends AbstractAction {

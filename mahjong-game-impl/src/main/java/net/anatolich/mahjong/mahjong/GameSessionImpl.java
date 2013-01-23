@@ -7,23 +7,23 @@ import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.GameSession;
 import net.anatolich.mahjong.game.Piece;
 import net.anatolich.mahjong.game.Tile;
-import net.anatolich.mahjong.game.spi.TileSet;
 import net.anatolich.mahjong.game.impl.BoardImpl;
 import net.anatolich.mahjong.game.impl.DefaultTileSet;
 import net.anatolich.mahjong.game.layout.LayoutFactory;
 import net.anatolich.mahjong.game.layout.LayoutImpl;
 import net.anatolich.mahjong.game.layout.Slot;
+import net.anatolich.mahjong.game.spi.TileSet;
 
 /**
  * Game session keeps track of game and allows player to interact with game.
  *
  * @author Dmytro Kovalchuk<dimasmith@gmail.com>
  */
-public class GameSessionMahjongImpl implements GameSession {
+public class GameSessionImpl implements GameSession {
 
     private final BoardImpl board;
 
-    private GameSessionMahjongImpl() {
+    public GameSessionImpl() {
         board = new BoardImpl();
         LayoutImpl layout = new LayoutFactory().getDefaultLayout();
         TileSet tileSet = new DefaultTileSet();
@@ -35,8 +35,8 @@ public class GameSessionMahjongImpl implements GameSession {
 
     }
 
-    public static GameSessionMahjongImpl startGame() {
-        return new GameSessionMahjongImpl();
+    public static GameSessionImpl startGame() {
+        return new GameSessionImpl();
     }
 
     @Override

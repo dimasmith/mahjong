@@ -1,5 +1,6 @@
 package net.anatolich.mahjong.game;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ServiceLoader;
@@ -19,8 +20,10 @@ public final class GameFactory {
         final ServiceLoader<Game> gameTypesLoader = ServiceLoader.load(Game.class);
 
         final List<Game> games = new LinkedList<>();
-        while ( gameTypesLoader.iterator().hasNext() ) {
-            Game game = gameTypesLoader.iterator().next();
+        final Iterator<Game> gameTypesIterator = gameTypesLoader.iterator();
+
+        while ( gameTypesIterator.hasNext() ) {
+            Game game = gameTypesIterator.next();
             games.add(game);
         }
 
