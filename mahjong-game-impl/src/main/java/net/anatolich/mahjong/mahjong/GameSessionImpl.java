@@ -1,5 +1,7 @@
 package net.anatolich.mahjong.mahjong;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import net.anatolich.mahjong.game.Board;
@@ -7,7 +9,8 @@ import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.GameSession;
 import net.anatolich.mahjong.game.Piece;
 import net.anatolich.mahjong.game.Tile;
-import net.anatolich.mahjong.game.impl.BoardImpl;
+import net.anatolich.mahjong.game.impl.BoardFiller;
+import net.anatolich.mahjong.game.impl.DefaultBoard;
 import net.anatolich.mahjong.game.impl.DefaultTileSet;
 import net.anatolich.mahjong.game.layout.LayoutFactory;
 import net.anatolich.mahjong.game.layout.LayoutImpl;
@@ -21,18 +24,13 @@ import net.anatolich.mahjong.game.spi.TileSet;
  */
 public class GameSessionImpl implements GameSession {
 
-    private final BoardImpl board;
+    private final DefaultBoard board;
 
     public GameSessionImpl() {
-        board = new BoardImpl();
+        board = new DefaultBoard();
         LayoutImpl layout = new LayoutFactory().getDefaultLayout();
         TileSet tileSet = new DefaultTileSet();
-        Iterator<Tile> tileIterator = tileSet.getTiles().iterator();
-        for ( Slot slot : layout.getSlots()) {
-            Tile tile = tileIterator.next();
-            board.putPiece(new Piece(tile, slot.getCoordinates()));
-        }
-
+        new BoardFiller(board).fill(layout, tileSet);
     }
 
     public static GameSessionImpl startGame() {

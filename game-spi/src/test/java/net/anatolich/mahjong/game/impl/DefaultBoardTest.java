@@ -17,19 +17,19 @@ import static org.junit.Assert.*;
  *
  * @author Dmytro Kovalchuk<dimasmith@gmail.com>
  */
-public class BoardImplTest {
+public class DefaultBoardTest {
 
     private Piece eastWindPiece;
     private Coordinates zeroCoordinates;
     private Tile eastWind;
-    private BoardImpl boardImpl;
+    private DefaultBoard boardImpl;
 
-    public BoardImplTest() {
+    public DefaultBoardTest() {
     }
 
     @Before
     public void setUp() {
-        boardImpl = new BoardImpl();
+        boardImpl = new DefaultBoard();
 
         zeroCoordinates = new Coordinates(0, 0, 0);
         eastWind = new Tile(Tile.Type.WINDS, Tile.Value.EAST);
@@ -43,6 +43,15 @@ public class BoardImplTest {
 
         Piece pieceFromBoard = boardImpl.getPieceAt(zeroCoordinates);
         assertThat(pieceFromBoard, is(eastWindPiece));
+    }
+
+    @Test
+    public void testRemovePiece(){
+        boardImpl.putPiece(eastWindPiece);
+
+        boardImpl.removePieceAt(eastWindPiece.getCoordinates());
+
+        assertThat(boardImpl.getPieceAt(eastWindPiece.getCoordinates()), nullValue());
     }
 
     @Test

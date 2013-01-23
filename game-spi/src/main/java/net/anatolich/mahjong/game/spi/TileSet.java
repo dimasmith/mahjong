@@ -4,14 +4,16 @@ import java.util.List;
 import net.anatolich.mahjong.game.Tile;
 
 /**
- * Contains set of tiles to be used in game.
+ * Complete set of tiles used in game. Tilesets may vary from game to game or even in single game.
  * @author Dmytro Kovalchuk<dimasmith@gmail.com>
+ * @version 1.0
+ * @since 1.0
  */
 public interface TileSet {
 
     /**
-     * Get full list of tiles.
-     * @return
+     * Lists tiles used in tileset.
+     * @return unmodifiable list of tiles. Cannot return null.
      */
     List<Tile> getTiles();
 }
