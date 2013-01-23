@@ -50,6 +50,9 @@ public class GameWindow extends JFrame {
         add(boardComponent, BorderLayout.CENTER);
 
         setJMenuBar(menuBar);
+        
+        setTitle("Tile Game");
+        
         pack();
         setExtendedState(MAXIMIZED_BOTH);
     }
@@ -61,7 +64,8 @@ public class GameWindow extends JFrame {
 
     public void setAvailableGames( List<Game> availableGames ) {
         for ( Game game : availableGames ) {
-            gameMenu.add(new PlayGameAction(game));
+            final PlayGameAction playGameAction = new PlayGameAction(game);                       
+            gameMenu.insert(playGameAction, 0);
         }
     }
 

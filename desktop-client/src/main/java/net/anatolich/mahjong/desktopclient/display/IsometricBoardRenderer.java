@@ -22,8 +22,9 @@ public class IsometricBoardRenderer {
     private Board board;
     private int height, width;
     private final PiecesTileMap tileMap;
+    private final CoordinateMapper coordinateMapper = new CoordinateMapper(10);
 
-    public IsometricBoardRenderer( Board board ) {
+    public IsometricBoardRenderer( Board board) {
         this.board = board;
         this.width = 16;
         this.height = 16;
@@ -36,7 +37,11 @@ public class IsometricBoardRenderer {
 
         List<Piece> pieces = new ArrayList<>(board.getAllPieces());
         Collections.sort(pieces, new IsometricCoordinateComparator());
+        final double translateX = (width - coordinateMapper.getLengthAlongX(18)) / 2;
+        final double translateY = (height - coordinateMapper.getLengthAlongY(16)) / 2;
 
+        g.translate(translateX, translateY);
+        
         for ( Piece piece : pieces ) {
             final TileShape tileShape = new TileShape(piece);
             tileShape.setPiecesTileMap(tileMap);
