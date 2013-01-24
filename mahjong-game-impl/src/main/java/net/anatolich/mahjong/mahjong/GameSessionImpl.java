@@ -1,20 +1,17 @@
 package net.anatolich.mahjong.mahjong;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import net.anatolich.mahjong.game.Board;
 import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.GameSession;
+import net.anatolich.mahjong.game.Layout;
 import net.anatolich.mahjong.game.Piece;
-import net.anatolich.mahjong.game.Tile;
-import net.anatolich.mahjong.game.impl.BoardFiller;
 import net.anatolich.mahjong.game.impl.DefaultBoard;
 import net.anatolich.mahjong.game.impl.DefaultTileSet;
 import net.anatolich.mahjong.game.layout.LayoutFactory;
-import net.anatolich.mahjong.game.layout.LayoutImpl;
-import net.anatolich.mahjong.game.layout.Slot;
+import net.anatolich.mahjong.game.rules.Rules;
+import net.anatolich.mahjong.game.spi.MutableBoard;
 import net.anatolich.mahjong.game.spi.TileSet;
 
 /**
@@ -24,17 +21,28 @@ import net.anatolich.mahjong.game.spi.TileSet;
  */
 public class GameSessionImpl implements GameSession {
 
-    private final DefaultBoard board;
+    private final MutableBoard board;
+    private final Layout layout;
+    private final TileSet tileSet;
+    private final Rules rules;
+    private boolean moveWasCompleted = false;
+    private Piece pickedPiece;
 
-    public GameSessionImpl() {
-        board = new DefaultBoard();
-        LayoutImpl layout = new LayoutFactory().getDefaultLayout();
-        TileSet tileSet = new DefaultTileSet();
-        new BoardFiller(board).fill(layout, tileSet);
+    GameSessionImpl() {
+        this(new LayoutFactory().getDefaultLayout());
     }
 
-    public static GameSessionImpl startGame() {
-        return new GameSessionImpl();
+    GameSessionImpl( Layout layout ) {
+        this(new DefaultBoard(), layout, new DefaultTileSet(), new MahjongRules());
+
+    }
+
+    GameSessionImpl( MutableBoard board, Layout layout, TileSet tileSet, Rules rules ) {
+        this.board = board;
+        this.layout = layout;
+        this.tileSet = tileSet;
+        this.rules = rules;
+//  TODO pull this code up      new BoardFiller(board).fill(this.layout, tileSet);
     }
 
     @Override
@@ -44,17 +52,32 @@ public class GameSessionImpl implements GameSession {
 
     @Override
     public List<Piece> getPickedPieces() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return ( noPickedPieces() ) ? Collections.EMPTY_LIST : Collections.singletonList(pickedPiece);
     }
 
     @Override
     public boolean wasMoveCompleted() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return moveWasCompleted;
     }
 
     @Override
     public void pickPieceAt( Coordinates coordinates ) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        moveWasCompleted = false;
+        final Piece piece = board.getPieceAt(coordinates);
+
+        if ( noPickedPieces() ) {
+            if ( rules.isPieceOpen(coordinates, board) ) {
+                pickPiece(piece);
+            }
+        } else {
+            if ( rules.isMoveLegal(getPickedPiece().getCoordinates(), piece.getCoordinates(), board) ) {
+                completeMove(piece);
+            } else {
+                if ( rules.isPieceOpen(coordinates, board) ) {
+                    pickPiece(piece);
+                } 
+            }
+        }
     }
 
     @Override
@@ -65,5 +88,33 @@ public class GameSessionImpl implements GameSession {
     @Override
     public boolean isGameEnded() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void setPickedPiece( Piece piece ) {
+        pickPiece(piece);
+    }
+
+    private void completeMove( final Piece piece ) {
+        moveWasCompleted = true;
+        board.removePieceAt(getPickedPiece().getCoordinates());
+        board.removePieceAt(piece.getCoordinates());
+        this.pickedPiece = null;
+    }
+
+    private void pickPiece( final Piece piece ) {
+        pickedPiece = piece;
+    }
+
+    private boolean noPickedPieces() {
+        return getPickedPiece() == null;
+    }
+
+    private Piece getPickedPiece() {
+        return pickedPiece;
+    }
+
+    @Override
+    public String toString() {
+        return "GameSessionImpl{" + "moveWasCompleted=" + moveWasCompleted + ", pickedPiece=" + pickedPiece + '}';
     }
 }

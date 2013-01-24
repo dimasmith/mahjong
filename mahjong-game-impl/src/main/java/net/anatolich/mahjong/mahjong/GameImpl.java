@@ -25,7 +25,7 @@ public class GameImpl implements Game {
 
     @Override
     public GameSession startGame( Layout layout ) {
-        return new GameSessionImpl();
+        return new GameSessionImpl(layout);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package net.anatolich.mahjong.mahjong;
 
-import java.util.EnumSet;
 import net.anatolich.mahjong.game.Board;
 import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.Piece;
@@ -12,8 +11,7 @@ import net.anatolich.mahjong.game.rules.Rules;
  * @author Dmytro Kovalchuk<dimasmith@gmail.com>
  */
 public class MahjongRules implements Rules {
-
-    private final EnumSet<Tile.Type> typeComplementTypes = EnumSet.of(Tile.Type.SEASONS, Tile.Type.FLOWERS);
+    private final TileMatcherImpl tileMatcher = new TileMatcherImpl();
 
     @Override
     public boolean isPieceOpen( Coordinates coordinates, Board board ) {
@@ -57,14 +55,10 @@ public class MahjongRules implements Rules {
             return false;
         }
 
-        Tile startTile = board.getPieceAt(start).getTile();
-        Tile endTile = board.getPieceAt(end).getTile();
+        final Tile startTile = board.getPieceAt(start).getTile();
+        final Tile endTile = board.getPieceAt(end).getTile();
 
-        if (typeComplementTypes.contains(startTile.getType()) ) {
-            return startTile.getType().equals(endTile.getType());
-        }
-
-        return startTile.getType().equals(endTile.getType()) && startTile.getValue().equals(endTile.getValue());
+        return tileMatcher.match(startTile, endTile);
 
     }
 }
