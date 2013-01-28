@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.Rectangle2D.Double;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,16 +18,16 @@ import org.slf4j.LoggerFactory;
  *
  * @author Dmytro Kovalchuk<dimasmith@gmail.com>
  */
-public class IsometricBoardRenderer {
+public class BoardView {
 
-    private static final Logger logger = LoggerFactory.getLogger(IsometricBoardRenderer.class);
+    private static final Logger logger = LoggerFactory.getLogger(BoardView.class);
     private Board board;
     private int height, width;
     private final PiecesTileMap tileMap;
     private final CoordinateMapper coordinateMapper = new CoordinateMapper(10);
     private double clickX, clickY;
 
-    public IsometricBoardRenderer( Board board ) {
+    public BoardView( Board board ) {
         this.board = board;
         this.width = 16;
         this.height = 16;

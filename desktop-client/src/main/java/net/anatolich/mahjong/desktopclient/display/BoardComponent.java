@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.JComponent;
 import net.anatolich.mahjong.game.Board;
+import net.anatolich.mahjong.game.BoardListener;
 import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.Piece;
 
@@ -18,11 +19,11 @@ import net.anatolich.mahjong.game.Piece;
 public class BoardComponent extends JComponent {
 
     private Board board;
-    private IsometricBoardRenderer renderer;
+    private BoardView renderer;
 
     public BoardComponent() {
         this.board = new EmptyBoard();
-        this.renderer = new IsometricBoardRenderer(board);
+        this.renderer = new BoardView(board);
 
         addMouseListener(new MouseAdapter() {
 
@@ -50,7 +51,7 @@ public class BoardComponent extends JComponent {
 
     public void setBoard( Board board ) {
         this.board = board;
-        this.renderer = new IsometricBoardRenderer(board);
+        this.renderer = new BoardView(board);
     }
 
     private static class EmptyBoard implements Board {
@@ -68,6 +69,14 @@ public class BoardComponent extends JComponent {
         @Override
         public Piece getPieceAt( Coordinates coordinates ) {
             return null;
+        }
+
+        @Override
+        public void addChangeListener( BoardListener listener ) {
+        }
+
+        @Override
+        public void removeChangeListener( BoardListener listener ) {
         }
 
     }

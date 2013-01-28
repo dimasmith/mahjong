@@ -22,27 +22,13 @@ import net.anatolich.mahjong.game.spi.TileSet;
 public class GameSessionImpl implements GameSession {
 
     private final MutableBoard board;
-    private final Layout layout;
-    private final TileSet tileSet;
     private final Rules rules;
     private boolean moveWasCompleted = false;
     private Piece pickedPiece;
 
-    GameSessionImpl() {
-        this(new LayoutFactory().getDefaultLayout());
-    }
-
-    GameSessionImpl( Layout layout ) {
-        this(new DefaultBoard(), layout, new DefaultTileSet(), new MahjongRules());
-
-    }
-
-    GameSessionImpl( MutableBoard board, Layout layout, TileSet tileSet, Rules rules ) {
+    public GameSessionImpl( MutableBoard board, Rules rules) {
         this.board = board;
-        this.layout = layout;
-        this.tileSet = tileSet;
         this.rules = rules;
-//  TODO pull this code up      new BoardFiller(board).fill(this.layout, tileSet);
     }
 
     @Override
@@ -75,7 +61,7 @@ public class GameSessionImpl implements GameSession {
             } else {
                 if ( rules.isPieceOpen(coordinates, board) ) {
                     pickPiece(piece);
-                } 
+                }
             }
         }
     }

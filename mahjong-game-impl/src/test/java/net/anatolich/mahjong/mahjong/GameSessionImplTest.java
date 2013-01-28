@@ -1,9 +1,7 @@
 package net.anatolich.mahjong.mahjong;
 
 import java.util.Arrays;
-import java.util.Collections;
 import net.anatolich.mahjong.game.Coordinates;
-import net.anatolich.mahjong.game.GameSession;
 import net.anatolich.mahjong.game.Layout;
 import net.anatolich.mahjong.game.Piece;
 import net.anatolich.mahjong.game.Tile;
@@ -11,16 +9,12 @@ import net.anatolich.mahjong.game.rules.Rules;
 import net.anatolich.mahjong.game.spi.MutableBoard;
 import net.anatolich.mahjong.game.spi.TileSet;
 import org.easymock.EasyMock;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.MatcherAssert.*;
+import static net.anatolich.mahjong.mahjong.GameSessionMatcher.*;
 import static org.hamcrest.CoreMatchers.*;
-import static net.anatolich.mahjong.mahjong.GameSessionImplTest.HasPickedPieces.*;
-import static net.anatolich.mahjong.mahjong.GameSessionImplTest.MoveWasCompleted.*;
+import static org.hamcrest.MatcherAssert.*;
 
 /**
  * Tests session implementation for correct behavior.
@@ -38,18 +32,14 @@ public class GameSessionImplTest {
     private Tile seasonSummer = new Tile(Tile.Type.SEASONS, Tile.Value.SUMMER);
     private GameSessionImpl session;
     private MutableBoard board;
-    private Layout layout;
-    private TileSet tileSet;
     private Rules rules;
 
     @Before
     public void setUp() {
         board = EasyMock.createMock("board", MutableBoard.class);
-        layout = EasyMock.createMock("layout", Layout.class);
-        tileSet = EasyMock.createMock("tileSet", TileSet.class);
         rules = EasyMock.createMock("rules", Rules.class);
 
-        session = new GameSessionImpl(board, layout, tileSet, rules);
+        session = new GameSessionImpl(board, rules);
 
     }
 
@@ -210,48 +200,5 @@ public class GameSessionImplTest {
 
         session.pickPieceAt(coords1);
         assertThat(session, moveWasCompleted());
-    }
-
-    static class HasPickedPieces extends TypeSafeMatcher<GameSession> {
-
-        @Override
-        protected boolean matchesSafely( GameSession session ) {
-            return !session.getPickedPieces().isEmpty();
-        }
-
-        @Override
-        public void describeTo( Description description ) {
-            description.appendText("some tiles are picked");
-        }
-
-        public static <T> Matcher<GameSession> hasPickedPieces() {
-            return new HasPickedPieces();
-        }
-
-        public static <T> Matcher<GameSession> noPiecesArePicked() {
-            return not(new HasPickedPieces());
-        }
-    }
-
-    static class MoveWasCompleted extends TypeSafeMatcher<GameSession> {
-
-        @Override
-        protected boolean matchesSafely( GameSession session ) {
-            return session.wasMoveCompleted();
-        }
-
-        @Override
-        public void describeTo( Description description ) {
-            description.appendText("move is completed");
-
-        }
-
-        public static <T> Matcher<GameSession> moveWasCompleted() {
-            return new MoveWasCompleted();
-        }
-
-        public static <T> Matcher<GameSession> moveWasNotCompleted() {
-            return not(new MoveWasCompleted());
-        }
     }
 }
