@@ -26,13 +26,14 @@ public class BoardComponent extends JComponent {
         this.renderer = new BoardView(board);
 
         addMouseListener(new MouseAdapter() {
-
+            
             @Override
-            public void mouseClicked( MouseEvent e ) {
-                renderer.clickOn(e.getX(), e.getY());
-                repaint();
+            public void mouseReleased( MouseEvent e ) {
+                if ( e.getButton() == MouseEvent.BUTTON1 ) {
+                    renderer.clickOn(e.getX(), e.getY());
+                    repaint();
+                }
             }
-
         });
     }
 
@@ -78,6 +79,5 @@ public class BoardComponent extends JComponent {
         @Override
         public void removeChangeListener( BoardListener listener ) {
         }
-
     }
 }

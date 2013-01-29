@@ -2,13 +2,17 @@ package net.anatolich.mahjong.desktopclient.display;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import net.anatolich.mahjong.desktopclient.assets.PiecesTileMap;
 import net.anatolich.mahjong.game.Board;
+import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.Piece;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,53 +25,32 @@ import org.slf4j.LoggerFactory;
 public class BoardView {
 
     private static final Logger logger = LoggerFactory.getLogger(BoardView.class);
+    private static final int TILE_WIDTH = 60;
+    private static final int TILE_HEIGHT = 80;
+    private static final int TRANSLATE_X = 300;
+    private static final int TRANSLATE_Y = 50;
     private Board board;
     private int height, width;
-    private final PiecesTileMap tileMap;
-    private final CoordinateMapper coordinateMapper = new CoordinateMapper(10);
-    private double clickX, clickY;
+    private PieceRenderer pieceRenderer = new PieceRenderer(TILE_WIDTH, TILE_HEIGHT);
+    private Piece selectedPiece = null;
+    private List<Piece> renderingQueue; // Contains pieces in order it should be rendered
 
     public BoardView( Board board ) {
         this.board = board;
         this.width = 16;
         this.height = 16;
-        this.tileMap = new PiecesTileMap();
+
+        queuePiecesForRendering();
     }
 
     public void draw( Graphics2D g ) {
 
         clearBoard(g);
 
-        List<Piece> pieces = new ArrayList<>(board.getAllPieces());
-        Collections.sort(pieces, new IsometricCoordinateComparator());
-        final double translateX = ( width - coordinateMapper.getLengthAlongX(30) ) / 2;
-        final double translateY = ( height - coordinateMapper.getLengthAlongY(16) ) / 2;
+        g.translate(TRANSLATE_X, TRANSLATE_Y);
 
-        g.translate(translateX, translateY);
-        final Point2D.Double clickPoint = new Point2D.Double(clickX - translateX, clickY - translateY);
-        g.fill(new Ellipse2D.Double(clickPoint.getX() - 5, clickPoint.getY() - 5, 10, 10));
-
-        TileShape highlightedShape = null;
-
-        final List<TileShape> shapes = new ArrayList<>();
-
-        for ( Piece piece : pieces ) {
-            final TileShape tileShape = new TileShape(piece);
-            tileShape.setPiecesTileMap(tileMap);
-            if ( tileShape.containsPoint(clickPoint) ) {
-                if ( highlightedShape == null || highlightedShape.getPiece().getCoordinates().getLayer() < tileShape.getPiece().getCoordinates().getLayer() ) {
-                    highlightedShape = tileShape;
-                }
-            }
-            shapes.add(tileShape);
-        }
-
-        if ( highlightedShape != null ) {
-            highlightedShape.setHighlighted(true);
-        }
-
-        for ( TileShape tileShape : shapes ) {
-            tileShape.draw(g);
+        for ( Piece piece : renderingQueue ) {
+            paintPiece(piece, g);
         }
 
     }
@@ -107,8 +90,84 @@ public class BoardView {
     }
 
     public void clickOn( double x, double y ) {
-        this.clickX = x;
-        this.clickY = y;
         logger.debug("Cliked at ({}, {})", x, y);
+        Point2D clickPoint = new Point2D.Double(x, y);
+
+        List<Piece> pieces = new ArrayList<>(board.getAllPieces());
+        Collections.sort(pieces, Collections.reverseOrder(new LayerPieceComparator()));
+
+        for ( Piece piece : pieces ) {
+            Coordinates c = piece.getCoordinates();
+            if ( pieceRenderer.getFace(calculateX(c) + TRANSLATE_X, calculateY(c) + TRANSLATE_Y).contains(clickPoint) ) {
+                selectedPiece = piece;
+                return;
+            }
+        }
+
+        selectedPiece = null;
+
+    }
+
+    private Shape createPieceClip( Coordinates coordinates ) {
+        final Coordinates[] touchingPiecesCoordinates = new Coordinates[]{
+            coordinates.translate(-2, -1, 0),
+            coordinates.translate(-2, 0, 0),
+            coordinates.translate(-2, 1, 0),
+            coordinates.translate(-2, 2, 0),
+            coordinates.translate(-1, 2, 0),
+            coordinates.translate(0, 2, 0) };
+
+        final Area baseClippingPath = new Area(pieceRenderer.getClip(calculateX(coordinates), calculateY(coordinates)));
+        for ( Coordinates coords : touchingPiecesCoordinates ) {
+            if ( board.getPieceAt(coords) == null ) {
+                continue;
+            }
+
+            Shape touchingOutline = pieceRenderer.getClip(calculateX(coords), calculateY(coords));
+            baseClippingPath.subtract(new Area(touchingOutline));
+        }
+
+        return baseClippingPath;
+    }
+
+    private int calculateX( final Coordinates coords ) {
+        final int layerShift = TILE_WIDTH / 4 * ( coords.getLayer() - 1 );
+        return coords.getX() * TILE_WIDTH / 2 + layerShift;
+    }
+
+    private int calculateY( final Coordinates coords ) {
+        final int layerShift = TILE_WIDTH / 4 * ( coords.getLayer() - 1 );
+        return coords.getY() * TILE_HEIGHT / 2 - layerShift;
+    }
+
+    private void paintPiece( Piece piece, Graphics2D g ) {
+        final Coordinates coords = piece.getCoordinates();
+        final int x = calculateX(coords);
+        final int y = calculateY(coords);
+
+        Graphics2D pieceGraphics = ( Graphics2D ) g.create();
+        Shape clip = createPieceClip(piece.getCoordinates());
+        pieceGraphics.setClip(clip);
+
+        pieceRenderer.paint(x, y, isSelected(piece), piece.getTile(), pieceGraphics);
+
+        pieceGraphics.dispose();
+    }
+
+    private void queuePiecesForRendering() {
+        renderingQueue = new ArrayList<>(board.getAllPieces());
+        Collections.sort(renderingQueue, new LayerPieceComparator());
+    }
+
+    private boolean isSelected( Piece piece ) {
+        return piece.equals(selectedPiece);
+    }
+
+    private static class LayerPieceComparator implements Comparator<Piece> {
+
+        @Override
+        public int compare( Piece o1, Piece o2 ) {
+            return o1.getCoordinates().getLayer() - o2.getCoordinates().getLayer();
+        }
     }
 }
