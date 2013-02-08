@@ -12,7 +12,10 @@ import java.util.Comparator;
 import java.util.List;
 import net.anatolich.mahjong.desktopclient.assets.PiecesTileMap;
 import net.anatolich.mahjong.game.Board;
+import net.anatolich.mahjong.game.BoardEvent;
+import net.anatolich.mahjong.game.BoardListener;
 import net.anatolich.mahjong.game.Coordinates;
+import net.anatolich.mahjong.game.GameSession;
 import net.anatolich.mahjong.game.Piece;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,21 +25,30 @@ import org.slf4j.LoggerFactory;
  *
  * @author Dmytro Kovalchuk<dimasmith@gmail.com>
  */
-public class BoardView {
+public class BoardView implements BoardListener {
 
     private static final Logger logger = LoggerFactory.getLogger(BoardView.class);
     private static final int TILE_WIDTH = 60;
     private static final int TILE_HEIGHT = 80;
     private static final int TRANSLATE_X = 300;
     private static final int TRANSLATE_Y = 50;
+    private GameSession session;
     private Board board;
     private int height, width;
     private PieceRenderer pieceRenderer = new PieceRenderer(TILE_WIDTH, TILE_HEIGHT);
-    private Piece selectedPiece = null;
     private List<Piece> renderingQueue; // Contains pieces in order it should be rendered
 
     public BoardView( Board board ) {
         this.board = board;
+        this.width = 16;
+        this.height = 16;
+
+        queuePiecesForRendering();
+    }
+
+    public BoardView( GameSession session ) {
+        this.session = session;
+        this.board = session.getBoard();
         this.width = 16;
         this.height = 16;
 
@@ -99,12 +111,9 @@ public class BoardView {
         for ( Piece piece : pieces ) {
             Coordinates c = piece.getCoordinates();
             if ( pieceRenderer.getFace(calculateX(c) + TRANSLATE_X, calculateY(c) + TRANSLATE_Y).contains(clickPoint) ) {
-                selectedPiece = piece;
-                return;
+                session.pickPieceAt(c);
             }
         }
-
-        selectedPiece = null;
 
     }
 
@@ -160,7 +169,12 @@ public class BoardView {
     }
 
     private boolean isSelected( Piece piece ) {
-        return piece.equals(selectedPiece);
+        return session.getPickedPieces().contains(piece);
+    }
+
+    @Override
+    public void boardChanged( BoardEvent evt ) {
+        queuePiecesForRendering();
     }
 
     private static class LayerPieceComparator implements Comparator<Piece> {

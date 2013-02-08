@@ -50,21 +50,21 @@ public class GameWindow extends JFrame {
         add(boardComponent, BorderLayout.CENTER);
 
         setJMenuBar(menuBar);
-        
+
         setTitle("Tile Game");
-        
+
         pack();
         setExtendedState(MAXIMIZED_BOTH);
     }
 
     void startGame(GameSession session){
-        boardComponent.setBoard(session.getBoard());
+        boardComponent.setGameSession(session);
         boardComponent.repaint();
     }
 
     public void setAvailableGames( List<Game> availableGames ) {
         for ( Game game : availableGames ) {
-            final PlayGameAction playGameAction = new PlayGameAction(game);                       
+            final PlayGameAction playGameAction = new PlayGameAction(game);
             gameMenu.insert(playGameAction, 0);
         }
     }
