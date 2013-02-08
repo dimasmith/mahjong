@@ -12,6 +12,7 @@ import static org.hamcrest.CoreMatchers.*;
 
 import static org.junit.Assert.*;
 
+import static net.anatolich.mahjong.game.impl.PieceBuilder.makePiece;
 
 /**
  *
@@ -23,9 +24,6 @@ public class DefaultBoardTest {
     private Coordinates zeroCoordinates;
     private Tile eastWind;
     private DefaultBoard boardImpl;
-
-    public DefaultBoardTest() {
-    }
 
     @Before
     public void setUp() {
@@ -46,7 +44,7 @@ public class DefaultBoardTest {
     }
 
     @Test
-    public void testRemovePiece(){
+    public void testRemovePiece() {
         boardImpl.putPiece(eastWindPiece);
 
         boardImpl.removePieceAt(eastWindPiece.getCoordinates());
@@ -64,10 +62,10 @@ public class DefaultBoardTest {
     public void testGetAllPieces() {
 
         Piece[] pieces = new Piece[]{
-            new Piece(new Tile(Tile.Type.BAMBOOS, Tile.Value.ONE), new Coordinates(2, 0, 0)),
-            new Piece(new Tile(Tile.Type.BAMBOOS, Tile.Value.TWO), new Coordinates(4, 0, 0)),
-            new Piece(new Tile(Tile.Type.BAMBOOS, Tile.Value.THREE), new Coordinates(6, 0, 0)),
-            new Piece(new Tile(Tile.Type.BAMBOOS, Tile.Value.FOUR), new Coordinates(8, 0, 0)) };
+            makePiece().bamboo().one().at(2, 0, 0),
+            makePiece().bamboo().two().at(4, 0, 0),
+            makePiece().bamboo().three().at(6, 0, 0),
+            makePiece().bamboo().four().at(8, 0, 0) };
 
         for ( Piece piece : pieces ) {
             boardImpl.putPiece(piece);
@@ -86,10 +84,10 @@ public class DefaultBoardTest {
     public void testGetAllPieces_EnsureUnmodifiable() {
 
         Piece[] pieces = new Piece[]{
-            new Piece(new Tile(Tile.Type.BAMBOOS, Tile.Value.ONE), new Coordinates(2, 0, 0)),
-            new Piece(new Tile(Tile.Type.BAMBOOS, Tile.Value.TWO), new Coordinates(4, 0, 0)),
-            new Piece(new Tile(Tile.Type.BAMBOOS, Tile.Value.THREE), new Coordinates(6, 0, 0)),
-            new Piece(new Tile(Tile.Type.BAMBOOS, Tile.Value.FOUR), new Coordinates(8, 0, 0)) };
+            makePiece().bamboo().one().at(2, 0, 0),
+            makePiece().bamboo().two().at(4, 0, 0),
+            makePiece().bamboo().three().at(6, 0, 0),
+            makePiece().bamboo().four().at(8, 0, 0) };
 
         for ( Piece piece : pieces ) {
             boardImpl.putPiece(piece);
@@ -106,12 +104,12 @@ public class DefaultBoardTest {
     @Test
     public void testGetTopmostPiece_EmptyColumn() {
         Piece[] pieces = new Piece[]{
-            new Piece(new Tile(Tile.Type.BAMBOOS, Tile.Value.ONE), new Coordinates(2, 0, 0)),
-            new Piece(new Tile(Tile.Type.BAMBOOS, Tile.Value.TWO), new Coordinates(4, 0, 0)),
-            new Piece(new Tile(Tile.Type.BAMBOOS, Tile.Value.THREE), new Coordinates(6, 0, 0)),
-            new Piece(new Tile(Tile.Type.BAMBOOS, Tile.Value.FOUR), new Coordinates(8, 0, 0)),
-            new Piece(new Tile(Tile.Type.BAMBOOS, Tile.Value.FIVE), new Coordinates(8, 0, 1)),
-            new Piece(new Tile(Tile.Type.BAMBOOS, Tile.Value.FIVE), new Coordinates(8, 0, 2))
+            makePiece().bamboo().one().at(2, 0, 0),
+            makePiece().bamboo().two().at(4, 0, 0),
+            makePiece().bamboo().three().at(6, 0, 0),
+            makePiece().bamboo().four().at(8, 0, 0),
+            makePiece().bamboo().five().at(8, 0, 1),
+            makePiece().bamboo().five().at(8, 0, 2)
         };
 
         for ( Piece piece : pieces ) {
@@ -128,11 +126,12 @@ public class DefaultBoardTest {
         final Piece topPiece = new Piece(new Tile(Tile.Type.BAMBOOS, Tile.Value.FIVE), new Coordinates(8, 0, 2));
 
         Piece[] pieces = new Piece[]{
-            new Piece(new Tile(Tile.Type.BAMBOOS, Tile.Value.ONE), new Coordinates(2, 0, 0)),
-            new Piece(new Tile(Tile.Type.BAMBOOS, Tile.Value.TWO), new Coordinates(4, 0, 0)),
-            new Piece(new Tile(Tile.Type.BAMBOOS, Tile.Value.THREE), new Coordinates(6, 0, 0)),
-            new Piece(new Tile(Tile.Type.BAMBOOS, Tile.Value.FOUR), new Coordinates(8, 0, 0)),
-            new Piece(new Tile(Tile.Type.BAMBOOS, Tile.Value.FIVE), new Coordinates(8, 0, 1)), topPiece };
+            makePiece().bamboo().one().at(2, 0, 0),
+            makePiece().bamboo().two().at(4, 0, 0),
+            makePiece().bamboo().three().at(6, 0, 0),
+            makePiece().bamboo().four().at(8, 0, 0),
+            makePiece().bamboo().five().at(8, 0, 1),
+            topPiece };
 
         for ( Piece piece : pieces ) {
             boardImpl.putPiece(piece);
