@@ -2,6 +2,10 @@ package net.anatolich.mahjong.mahjong;
 
 import net.anatolich.mahjong.game.Tile;
 import org.junit.Test;
+
+import static net.anatolich.mahjong.game.Tile.Type.*;
+import static net.anatolich.mahjong.game.Tile.Value.*;
+
 import static org.junit.Assert.*;
 
 /**
@@ -10,14 +14,14 @@ import static org.junit.Assert.*;
  */
 public class TileMatcherImplTest {
 
-    private TileMatcherImpl tileMatcher = new TileMatcherImpl();
+    private TileMatcher tileMatcher = new TileMatcherImpl();
 
     @Test
     public void testTypeOnlyMatch() {
-        Tile seasonSpring = new Tile(Tile.Type.SEASONS, Tile.Value.SPRING);
-        Tile seasonSummer = new Tile(Tile.Type.SEASONS, Tile.Value.SUMMER);
-        Tile flowerPlum = new Tile(Tile.Type.FLOWERS, Tile.Value.PLUM);
-        Tile flowerOrchid = new Tile(Tile.Type.FLOWERS, Tile.Value.ORCHID);
+        Tile seasonSpring = new Tile(SEASONS, SPRING);
+        Tile seasonSummer = new Tile(SEASONS, SUMMER);
+        Tile flowerPlum = new Tile(FLOWERS, PLUM);
+        Tile flowerOrchid = new Tile(FLOWERS, ORCHID);
 
         assertTileMatch(seasonSpring, seasonSpring);
         assertTileMatch(seasonSpring, seasonSummer);
@@ -30,10 +34,10 @@ public class TileMatcherImplTest {
 
     @Test
     public void testTypeValueMatch() {
-        Tile bambooOne = new Tile(Tile.Type.BAMBOOS, Tile.Value.ONE);
-        Tile bambooTwo = new Tile(Tile.Type.BAMBOOS, Tile.Value.TWO);
-        Tile dragonRed = new Tile(Tile.Type.DRAGONS, Tile.Value.RED);
-        Tile dragonWhite = new Tile(Tile.Type.DRAGONS, Tile.Value.WHITE);
+        Tile bambooOne = new Tile(BAMBOOS, ONE);
+        Tile bambooTwo = new Tile(BAMBOOS, TWO);
+        Tile dragonRed = new Tile(DRAGONS, RED);
+        Tile dragonWhite = new Tile(DRAGONS, WHITE);
 
         assertTileMatch(bambooOne, bambooOne);
         assertTileNotMatch(bambooOne, bambooTwo);

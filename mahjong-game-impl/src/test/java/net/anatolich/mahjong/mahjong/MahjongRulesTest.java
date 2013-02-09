@@ -5,10 +5,11 @@ import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.Piece;
 import net.anatolich.mahjong.game.Tile;
 import net.anatolich.mahjong.test.MockBoardBuilder;
+import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.*;
+import static net.anatolich.mahjong.test.PieceBuilder.makePiece;
 
 import static org.junit.Assert.*;
 
@@ -18,88 +19,109 @@ import static org.junit.Assert.*;
  */
 public class MahjongRulesTest {
 
-    public final Tile bambooOne = new Tile(Tile.Type.BAMBOOS, Tile.Value.ONE);
-    public final MahjongRules mahjongRules = new MahjongRules();
+    private BlockChecker blockChecker;
+    private TileMatcher tileMatcher;
+    private MahjongRules mahjongRules;
 
+    @Before
+    public void setUp(){
+        blockChecker = EasyMock.createMock("blockChecker", BlockChecker.class);
+        tileMatcher = EasyMock.createMock("tileMatcher", TileMatcher.class);
+
+        mahjongRules = new MahjongRules(blockChecker, tileMatcher);
+    }
+
+    /**
+     * Checks that user cannot make move when selecting the same piece twice.
+     */
     @Test
-    public void testIsPieceOpen_MissingPiece() {
-        Piece missingPiece = new Piece(bambooOne, new Coordinates(0, 0, 0));
+    public void ensureMoveWithSameTileIsIllegal() {
+        final Coordinates coordinates = new Coordinates(0, 0, 0);
+        final Piece piece = makePiece().bamboo().one().at(coordinates);
+        final Board board = MockBoardBuilder.createBoard(piece);
 
-        Board board = MockBoardBuilder.createBoard();
-
-        assertThat("Missing piece cannot be open", mahjongRules.isPieceOpen(missingPiece.getCoordinates(), board), is(false));
+        assertFalse("Move is illegal for the same tile picked up twice",
+                    mahjongRules.isMoveLegal(coordinates, coordinates, board));
     }
 
     @Test
-    public void testIsPieceOpen_SinglePiece() {
-        Piece singlePiece = new Piece(bambooOne, new Coordinates(0, 0, 0));
+    public void testIsOpen(){
+        final Coordinates coordinates = new Coordinates(0, 0, 0);
+        final Board board = MockBoardBuilder.createBoard();
 
-        Board board = MockBoardBuilder.createBoard(singlePiece);
+        EasyMock.expect(blockChecker.isBlocked(coordinates, board)).andReturn(true);
+        EasyMock.replay(blockChecker);
 
-        assertThat("Single piece must be open", mahjongRules.isPieceOpen(singlePiece.getCoordinates(), board), is(true));
+        assertFalse(mahjongRules.isPieceOpen(coordinates, board));
+
+        EasyMock.reset(blockChecker);
+        EasyMock.expect(blockChecker.isBlocked(coordinates, board)).andReturn(false);
+        EasyMock.replay(blockChecker);
+
+        assertTrue(mahjongRules.isPieceOpen(coordinates, board));
     }
 
     @Test
-    public void testIsPieceOpen_BlockedByUpperPiece() {
-        final Coordinates base = new Coordinates(2, 2, 0);
-        final Piece blockedPiece = new Piece(bambooOne, base);
+    public void testMoveWithFirstPieceBlocked(){
+        final Coordinates c1 = new Coordinates(0, 0, 0);
+        final Coordinates c2 = c1.translate(2, 0, 0);
+        final Board board = MockBoardBuilder.createBoard();
 
-        final Piece upperLeftBackPiece = new Piece(bambooOne, base.translate(-1, -1, 1));
-        final Piece upperLeftPiece = new Piece(bambooOne, base.translate(-1, 0, 1));
-        final Piece upperLeftFrontPiece = new Piece(bambooOne, base.translate(-1, 1, 1));
+        EasyMock.expect(blockChecker.isBlocked(c1, board)).andReturn(true);
+        EasyMock.expect(blockChecker.isBlocked(c2, board)).andReturn(false);
+        EasyMock.replay(blockChecker);
 
-        final Piece upperBackPiece = new Piece(bambooOne, base.translate(0, -1, 1));
-        final Piece upperPiece = new Piece(bambooOne, base.translate(0, 0, 1));
-        final Piece upperFrontPiece = new Piece(bambooOne, base.translate(0, 1, 1));
-
-        final Piece upperRightBackPiece = new Piece(bambooOne, base.translate(1, -1, 1));
-        final Piece upperRightPiece = new Piece(bambooOne, base.translate(1, 0, 1));
-        final Piece upperRightFrontPiece = new Piece(bambooOne, base.translate(1, 1, 1));
-
-        final Piece[] blockers = new Piece[]{
-            upperLeftBackPiece,
-            upperLeftPiece,
-            upperLeftFrontPiece,
-            upperBackPiece,
-            upperPiece,
-            upperFrontPiece,
-            upperRightBackPiece,
-            upperRightPiece,
-            upperRightFrontPiece
-        };
-
-        for ( Piece blocker : blockers ) {
-            Board board = MockBoardBuilder.createBoard(blockedPiece, blocker);
-            assertThat(String.format("Piece at %s is blocked by piece at %s", blockedPiece.getCoordinates(), blocker.getCoordinates()),
-                       mahjongRules.isPieceOpen(blockedPiece.getCoordinates(), board), is(false));
-        }
+        assertFalse(mahjongRules.isMoveLegal(c1, c2, board));
     }
 
     @Test
-    public void testIsPieceOpen_BothSidesBlocked() {
-        final Coordinates base = new Coordinates(2, 2, 0);
-        Piece blockedPiece = new Piece(bambooOne, base);
+    public void testMoveWithSecondPieceBlocked(){
+        final Coordinates c1 = new Coordinates(0, 0, 0);
+        final Coordinates c2 = c1.translate(2, 0, 0);
+        final Board board = MockBoardBuilder.createBoard();
 
-        final Piece[] leftBlockers = new Piece[]{
-            new Piece(bambooOne, base.translate(-2, -1, 0)),
-            new Piece(bambooOne, base.translate(-2, 0, 0)),
-            new Piece(bambooOne, base.translate(-2, 1, 0))
-        };
+        EasyMock.expect(blockChecker.isBlocked(c1, board)).andReturn(false);
+        EasyMock.expect(blockChecker.isBlocked(c2, board)).andReturn(true);
+        EasyMock.replay(blockChecker);
 
-        final Piece[] rightBlockers = new Piece[]{
-            new Piece(bambooOne, base.translate(2, -1, 0)),
-            new Piece(bambooOne, base.translate(2, 0, 0)),
-            new Piece(bambooOne, base.translate(2, 1, 0))
-        };
+        assertFalse(mahjongRules.isMoveLegal(c1, c2, board));
+    }
 
-        for ( Piece leftBlocker : leftBlockers ) {
-            for ( Piece rightBlocker : rightBlockers ) {
-                Board board = MockBoardBuilder.createBoard(leftBlocker, blockedPiece, rightBlocker);
-                assertThat(String.format("Piece at %s is side-blocked by pieces at %s and %s", blockedPiece.getCoordinates(), leftBlocker.getCoordinates(), rightBlocker.getCoordinates()),
-                           mahjongRules.isPieceOpen(blockedPiece.getCoordinates(), board), is(false));
+    @Test
+    public void testMoveWithNotMatchingTiles(){
+        final Coordinates c1 = new Coordinates(0, 0, 0);
+        final Coordinates c2 = c1.translate(2, 0, 0);
+        final Board board = MockBoardBuilder.createBoard(
+                makePiece().bamboo().one().at(c1),
+                makePiece().bamboo().two().at(c2)
+                );
 
+        EasyMock.expect(blockChecker.isBlocked(c1, board)).andReturn(false);
+        EasyMock.expect(blockChecker.isBlocked(c2, board)).andReturn(false);
+        EasyMock.replay(blockChecker);
 
-            }
-        }
+        EasyMock.expect(tileMatcher.match(EasyMock.anyObject(Tile.class), EasyMock.anyObject(Tile.class))).andReturn(false);
+        EasyMock.replay(tileMatcher);
+
+        assertFalse(mahjongRules.isMoveLegal(c1, c2, board));
+    }
+
+    @Test
+    public void testMoveWithMatchingTiles(){
+        final Coordinates c1 = new Coordinates(0, 0, 0);
+        final Coordinates c2 = c1.translate(2, 0, 0);
+        final Board board = MockBoardBuilder.createBoard(
+                makePiece().bamboo().one().at(c1),
+                makePiece().bamboo().two().at(c2)
+                );
+
+        EasyMock.expect(blockChecker.isBlocked(c1, board)).andReturn(false);
+        EasyMock.expect(blockChecker.isBlocked(c2, board)).andReturn(false);
+        EasyMock.replay(blockChecker);
+
+        EasyMock.expect(tileMatcher.match(EasyMock.anyObject(Tile.class), EasyMock.anyObject(Tile.class))).andReturn(true);
+        EasyMock.replay(tileMatcher);
+
+        assertTrue(mahjongRules.isMoveLegal(c1, c2, board));
     }
 }

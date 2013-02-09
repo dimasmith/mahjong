@@ -11,10 +11,11 @@ import net.anatolich.mahjong.game.Tile;
  * @version 1.0
  * @since 1.0
  */
-public final class TileMatcherImpl {
+public final class TileMatcherImpl implements TileMatcher {
 
     private static final EnumSet<Tile.Type> typeMatched = EnumSet.of(Tile.Type.SEASONS, Tile.Type.FLOWERS);
 
+    @Override
     public boolean match( Tile t1, Tile t2 ) {
         if ( typeMatched.contains(t1.getType()) ) {
             return t1.getType().equals(t2.getType());
