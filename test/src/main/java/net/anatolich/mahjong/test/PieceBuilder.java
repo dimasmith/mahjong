@@ -1,4 +1,4 @@
-package net.anatolich.mahjong.game.impl;
+package net.anatolich.mahjong.test;
 
 import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.Piece;

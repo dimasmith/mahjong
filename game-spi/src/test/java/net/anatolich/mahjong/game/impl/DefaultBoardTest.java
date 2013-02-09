@@ -12,7 +12,7 @@ import static org.hamcrest.CoreMatchers.*;
 
 import static org.junit.Assert.*;
 
-import static net.anatolich.mahjong.game.impl.PieceBuilder.makePiece;
+import static net.anatolich.mahjong.test.PieceBuilder.makePiece;
 
 /**
  *
