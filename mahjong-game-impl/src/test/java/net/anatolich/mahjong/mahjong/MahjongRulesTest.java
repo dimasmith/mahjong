@@ -1,8 +1,5 @@
 package net.anatolich.mahjong.mahjong;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import net.anatolich.mahjong.game.Board;
 import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.Piece;

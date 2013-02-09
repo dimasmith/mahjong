@@ -5,14 +5,9 @@ import java.util.List;
 import net.anatolich.mahjong.game.Board;
 import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.GameSession;
-import net.anatolich.mahjong.game.Layout;
 import net.anatolich.mahjong.game.Piece;
-import net.anatolich.mahjong.game.impl.DefaultBoard;
-import net.anatolich.mahjong.game.impl.DefaultTileSet;
-import net.anatolich.mahjong.game.layout.LayoutFactory;
 import net.anatolich.mahjong.game.rules.Rules;
 import net.anatolich.mahjong.game.spi.MutableBoard;
-import net.anatolich.mahjong.game.spi.TileSet;
 
 /**
  * Game session keeps track of game and allows player to interact with game.

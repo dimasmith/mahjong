@@ -2,12 +2,10 @@ package net.anatolich.mahjong.mahjong;
 
 import java.util.Arrays;
 import net.anatolich.mahjong.game.Coordinates;
-import net.anatolich.mahjong.game.Layout;
 import net.anatolich.mahjong.game.Piece;
 import net.anatolich.mahjong.game.Tile;
 import net.anatolich.mahjong.game.rules.Rules;
 import net.anatolich.mahjong.game.spi.MutableBoard;
-import net.anatolich.mahjong.game.spi.TileSet;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -158,10 +156,8 @@ public class GameSessionImplTest {
 
         makeMove();
 
-        EasyMock.reset(board);
         setUpBoard(bambooOnePiece);
 
-        EasyMock.reset(rules);
         EasyMock.expect(rules.isPieceOpen(bambooOnePiece.getCoordinates(), board)).andReturn(true);
         EasyMock.replay(rules);
 
@@ -200,5 +196,8 @@ public class GameSessionImplTest {
 
         session.pickPieceAt(coords1);
         assertThat(session, moveWasCompleted());
+
+        EasyMock.reset(board);
+        EasyMock.reset(rules);
     }
 }

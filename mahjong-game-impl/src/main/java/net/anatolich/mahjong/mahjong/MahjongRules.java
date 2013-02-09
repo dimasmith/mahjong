@@ -51,6 +51,10 @@ public class MahjongRules implements Rules {
 
     @Override
     public boolean isMoveLegal( Coordinates start, Coordinates end, Board board ) {
+        if (start.equals(end) ){
+            return false;
+        }
+
         if (!isPieceOpen(start, board) || !isPieceOpen(end, board) ){
             return false;
         }
