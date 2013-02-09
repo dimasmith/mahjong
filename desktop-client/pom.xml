@@ -7,7 +7,6 @@
     <artifactId>mahjong</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
-  <groupId>net.anatolich.mahjong</groupId>
   <artifactId>desktop-client</artifactId>
   <name>desktop-client</name>
   <url>http://maven.apache.org</url>
