@@ -4,13 +4,11 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import net.anatolich.mahjong.desktopclient.assets.PiecesTileMap;
 import net.anatolich.mahjong.game.Board;
 import net.anatolich.mahjong.game.BoardEvent;
 import net.anatolich.mahjong.game.BoardListener;
@@ -30,21 +28,13 @@ public class BoardView implements BoardListener {
     private static final Logger logger = LoggerFactory.getLogger(BoardView.class);
     private static final int TILE_WIDTH = 60;
     private static final int TILE_HEIGHT = 80;
-    private static final int TRANSLATE_X = 300;
-    private static final int TRANSLATE_Y = 50;
+    private static int TRANSLATE_X = 400;
+    private static int TRANSLATE_Y = 50;
     private GameSession session;
     private Board board;
     private int height, width;
     private PieceRenderer pieceRenderer = new PieceRenderer(TILE_WIDTH, TILE_HEIGHT);
     private List<Piece> renderingQueue; // Contains pieces in order it should be rendered
-
-    public BoardView( Board board ) {
-        this.board = board;
-        this.width = 16;
-        this.height = 16;
-
-        queuePiecesForRendering();
-    }
 
     public BoardView( GameSession session ) {
         this.session = session;

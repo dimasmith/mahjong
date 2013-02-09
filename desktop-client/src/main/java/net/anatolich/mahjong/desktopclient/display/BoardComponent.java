@@ -19,13 +19,13 @@ import net.anatolich.mahjong.game.Piece;
  */
 public class BoardComponent extends JComponent {
 
-    private GameSession game;
+    private GameSession session;
     private Board board;
     private BoardView renderer;
 
     public BoardComponent() {
-        this.board = new EmptyBoard();
-        this.renderer = new BoardView(board);
+        this.session = new DummyGameSession();
+        this.renderer = new BoardView(session);
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -48,18 +48,53 @@ public class BoardComponent extends JComponent {
     }
 
     public Board getBoard() {
-        return board;
+        return session.getBoard();
     }
 
     public GameSession getGameSession() {
-        return game;
+        return session;
     }
 
     public void setGameSession( GameSession game ) {
-        this.game = game;
+        this.session = game;
         this.board = game.getBoard();
         this.renderer = new BoardView(game);
         board.addChangeListener(renderer);
+    }
+
+    private static class DummyGameSession implements GameSession {
+
+        private static final EmptyBoard EMPTY_BOARD = new EmptyBoard();
+
+        @Override
+        public Board getBoard() {
+            return EMPTY_BOARD;
+        }
+
+        @Override
+        public List<Piece> getPickedPieces() {
+            return Collections.EMPTY_LIST;
+        }
+
+        @Override
+        public boolean wasMoveCompleted() {
+            return false;
+        }
+
+        @Override
+        public void pickPieceAt( Coordinates coordinates ) {
+        }
+
+        @Override
+        public boolean hasMoreMoves() {
+            return false;
+        }
+
+        @Override
+        public boolean isGameEnded() {
+            return false;
+        }
+
     }
 
     private static class EmptyBoard implements Board {

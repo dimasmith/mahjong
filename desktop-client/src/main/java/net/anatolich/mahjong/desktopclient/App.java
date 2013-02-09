@@ -19,10 +19,16 @@ public class App implements Runnable {
     public static void main( String[] args ) {
         SwingUtilities.invokeLater(new App());
     }
-    private GameWindow gameWindow = new GameWindow();
+
+    private GameWindow gameWindow;
 
     @Override
     public void run() {
+
+        Application context = Application.getContext();
+        context.setDevMode(true);
+
+        gameWindow = new GameWindow();
 
         final GameFactory gameFactory = new GameFactory();
         List<Game> availableGames = gameFactory.availableGames();

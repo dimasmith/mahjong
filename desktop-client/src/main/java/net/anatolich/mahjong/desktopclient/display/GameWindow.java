@@ -8,6 +8,8 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
+import net.anatolich.mahjong.desktopclient.Application;
 import net.anatolich.mahjong.game.Game;
 import net.anatolich.mahjong.game.GameSession;
 
@@ -20,10 +22,10 @@ public class GameWindow extends JFrame {
     private JMenuBar menuBar;
     private JMenu settingsMenu;
     private JMenuItem settingsMenuItem;
-
+    private JMenu devMenu;
+    private JMenuItem repaintMenuItem;
     private JMenu gameMenu;
     private JMenuItem exitMenuItem;
-
     private BoardComponent boardComponent;
 
     public GameWindow() {
@@ -50,14 +52,23 @@ public class GameWindow extends JFrame {
         add(boardComponent, BorderLayout.CENTER);
 
         setJMenuBar(menuBar);
+        final boolean devMode = Application.getContext().isDevMode();
 
-        setTitle("Tile Game");
+        final String title = ( devMode ) ? "Tile Game - DEV MODE" : "Tile Game";
+        setTitle(title);
+
+        if ( devMode ) {
+            devMenu = new JMenu("Development");
+            repaintMenuItem = new JMenuItem(new DevRepaintAction());
+            devMenu.add(repaintMenuItem);
+            menuBar.add(devMenu);
+        }
 
         pack();
         setExtendedState(MAXIMIZED_BOTH);
     }
 
-    void startGame(GameSession session){
+    void startGame( GameSession session ) {
         boardComponent.setGameSession(session);
         boardComponent.repaint();
     }
@@ -70,6 +81,7 @@ public class GameWindow extends JFrame {
     }
 
     private class PlayGameAction extends AbstractAction {
+
         private final Game game;
 
         public PlayGameAction( Game game ) {
@@ -82,15 +94,13 @@ public class GameWindow extends JFrame {
             final GameSession gameSession = game.startGame();
             startGame(gameSession);
         }
-
-
     }
 
     private static class ExitAction extends AbstractAction {
 
         private final GameWindow gameWindow;
 
-        public ExitAction(GameWindow gameWindow) {
+        public ExitAction( GameWindow gameWindow ) {
             this.gameWindow = gameWindow;
             putValue(NAME, "Exit");
         }
@@ -99,7 +109,18 @@ public class GameWindow extends JFrame {
         public void actionPerformed( ActionEvent e ) {
             gameWindow.dispose();
         }
+    }
 
+    private class DevRepaintAction extends AbstractAction {
 
+        public DevRepaintAction() {
+            putValue(NAME, "Repaint");
+            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("pressed F5"));
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent ae ) {
+            boardComponent.repaint();
+        }
     }
 }
