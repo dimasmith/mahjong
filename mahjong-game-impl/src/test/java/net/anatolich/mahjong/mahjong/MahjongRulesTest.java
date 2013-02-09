@@ -4,11 +4,13 @@ import net.anatolich.mahjong.game.Board;
 import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.Piece;
 import net.anatolich.mahjong.game.Tile;
-import org.easymock.EasyMock;
+import net.anatolich.mahjong.test.MockBoardBuilder;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
 import static org.hamcrest.CoreMatchers.*;
+
+import static org.junit.Assert.*;
 
 /**
  *
@@ -16,19 +18,14 @@ import static org.hamcrest.CoreMatchers.*;
  */
 public class MahjongRulesTest {
 
-    private Board board;
     public final Tile bambooOne = new Tile(Tile.Type.BAMBOOS, Tile.Value.ONE);
     public final MahjongRules mahjongRules = new MahjongRules();
-
-    @Before
-    public void setUp() {
-    }
 
     @Test
     public void testIsPieceOpen_MissingPiece() {
         Piece missingPiece = new Piece(bambooOne, new Coordinates(0, 0, 0));
 
-        initializeBoard();
+        Board board = MockBoardBuilder.createBoard();
 
         assertThat("Missing piece cannot be open", mahjongRules.isPieceOpen(missingPiece.getCoordinates(), board), is(false));
     }
@@ -37,7 +34,7 @@ public class MahjongRulesTest {
     public void testIsPieceOpen_SinglePiece() {
         Piece singlePiece = new Piece(bambooOne, new Coordinates(0, 0, 0));
 
-        initializeBoard(singlePiece);
+        Board board = MockBoardBuilder.createBoard(singlePiece);
 
         assertThat("Single piece must be open", mahjongRules.isPieceOpen(singlePiece.getCoordinates(), board), is(true));
     }
@@ -72,7 +69,7 @@ public class MahjongRulesTest {
         };
 
         for ( Piece blocker : blockers ) {
-            initializeBoard(blockedPiece, blocker);
+            Board board = MockBoardBuilder.createBoard(blockedPiece, blocker);
             assertThat(String.format("Piece at %s is blocked by piece at %s", blockedPiece.getCoordinates(), blocker.getCoordinates()),
                        mahjongRules.isPieceOpen(blockedPiece.getCoordinates(), board), is(false));
         }
@@ -97,22 +94,12 @@ public class MahjongRulesTest {
 
         for ( Piece leftBlocker : leftBlockers ) {
             for ( Piece rightBlocker : rightBlockers ) {
-                initializeBoard(leftBlocker, blockedPiece, rightBlocker);
+                Board board = MockBoardBuilder.createBoard(leftBlocker, blockedPiece, rightBlocker);
                 assertThat(String.format("Piece at %s is side-blocked by pieces at %s and %s", blockedPiece.getCoordinates(), leftBlocker.getCoordinates(), rightBlocker.getCoordinates()),
                            mahjongRules.isPieceOpen(blockedPiece.getCoordinates(), board), is(false));
 
 
             }
         }
-    }
-
-    private void initializeBoard( Piece... pieces ) {
-        board = EasyMock.createMock("board", Board.class);
-        for ( Piece piece : pieces ) {
-            EasyMock.expect(board.getPieceAt(piece.getCoordinates())).andReturn(piece);
-        }
-
-        EasyMock.expect(board.getPieceAt(EasyMock.anyObject(Coordinates.class))).andReturn(null).anyTimes();
-        EasyMock.replay(board);
     }
 }

@@ -10,7 +10,7 @@ import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
-import static net.anatolich.mahjong.mahjong.GameSessionMatcher.*;
+import static net.anatolich.mahjong.test.GameSessionMatcher.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
 
