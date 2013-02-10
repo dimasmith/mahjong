@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.JComponent;
+import net.anatolich.mahjong.game.AvailableMove;
 import net.anatolich.mahjong.game.Board;
 import net.anatolich.mahjong.game.BoardEvent;
 import net.anatolich.mahjong.game.BoardListener;
@@ -100,6 +101,11 @@ public class BoardComponent extends JComponent {
         @Override
         public boolean isGameEnded() {
             return false;
+        }
+
+        @Override
+        public List<AvailableMove> getAvailableMoves() {
+            return Collections.EMPTY_LIST;
         }
 
     }

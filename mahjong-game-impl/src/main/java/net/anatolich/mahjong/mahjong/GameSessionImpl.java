@@ -2,6 +2,7 @@ package net.anatolich.mahjong.mahjong;
 
 import java.util.Collections;
 import java.util.List;
+import net.anatolich.mahjong.game.AvailableMove;
 import net.anatolich.mahjong.game.Board;
 import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.GameSession;
@@ -20,10 +21,14 @@ public class GameSessionImpl implements GameSession {
     private final Rules rules;
     private boolean moveWasCompleted = false;
     private Piece pickedPiece;
+    private final AvailableMovesCollector availableMovesCollector;
+    private List<AvailableMove> availableMoves;
 
-    public GameSessionImpl( MutableBoard board, Rules rules) {
+    public GameSessionImpl(MutableBoard board, Rules rules) {
         this.board = board;
         this.rules = rules;
+        this.availableMovesCollector = new AvailableMovesCollector(board, rules);
+        calculateAvailableMoves();
     }
 
     @Override
@@ -33,7 +38,7 @@ public class GameSessionImpl implements GameSession {
 
     @Override
     public List<Piece> getPickedPieces() {
-        return ( noPickedPieces() ) ? Collections.EMPTY_LIST : Collections.singletonList(pickedPiece);
+        return (noPickedPieces()) ? Collections.EMPTY_LIST : Collections.singletonList(pickedPiece);
     }
 
     @Override
@@ -42,19 +47,19 @@ public class GameSessionImpl implements GameSession {
     }
 
     @Override
-    public void pickPieceAt( Coordinates coordinates ) {
+    public void pickPieceAt(Coordinates coordinates) {
         moveWasCompleted = false;
         final Piece piece = board.getPieceAt(coordinates);
 
-        if ( noPickedPieces() ) {
-            if ( rules.isPieceOpen(coordinates, board) ) {
+        if (noPickedPieces()) {
+            if (rules.isPieceOpen(coordinates, board)) {
                 pickPiece(piece);
             }
         } else {
-            if ( rules.isMoveLegal(getPickedPiece().getCoordinates(), piece.getCoordinates(), board) ) {
+            if (rules.isMoveLegal(getPickedPiece().getCoordinates(), piece.getCoordinates(), board)) {
                 completeMove(piece);
             } else {
-                if ( rules.isPieceOpen(coordinates, board) ) {
+                if (rules.isPieceOpen(coordinates, board)) {
                     pickPiece(piece);
                 }
             }
@@ -63,26 +68,32 @@ public class GameSessionImpl implements GameSession {
 
     @Override
     public boolean hasMoreMoves() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return !getAvailableMoves().isEmpty();
     }
 
     @Override
     public boolean isGameEnded() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return board.getAllPieces().isEmpty();
     }
 
-    public void setPickedPiece( Piece piece ) {
+    @Override
+    public List<AvailableMove> getAvailableMoves() {
+        return availableMoves;
+    }
+
+    public void setPickedPiece(Piece piece) {
         pickPiece(piece);
     }
 
-    private void completeMove( final Piece piece ) {
+    private void completeMove(final Piece piece) {
         moveWasCompleted = true;
         board.removePieceAt(getPickedPiece().getCoordinates());
         board.removePieceAt(piece.getCoordinates());
         this.pickedPiece = null;
+        calculateAvailableMoves();
     }
 
-    private void pickPiece( final Piece piece ) {
+    private void pickPiece(final Piece piece) {
         pickedPiece = piece;
     }
 
@@ -97,5 +108,9 @@ public class GameSessionImpl implements GameSession {
     @Override
     public String toString() {
         return "GameSessionImpl{" + "moveWasCompleted=" + moveWasCompleted + ", pickedPiece=" + pickedPiece + '}';
+    }
+
+    private void calculateAvailableMoves() {
+        this.availableMoves = availableMovesCollector.collectMoves();
     }
 }

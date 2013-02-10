@@ -1,5 +1,6 @@
 package net.anatolich.mahjong.test;
 
+import java.util.Arrays;
 import net.anatolich.mahjong.game.Board;
 import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.Piece;
@@ -21,6 +22,8 @@ public class MockBoardBuilder {
         }
 
         EasyMock.expect(board.getPieceAt(EasyMock.anyObject(Coordinates.class))).andReturn(null).anyTimes();
+        
+        EasyMock.expect(board.getAllPieces()).andReturn(Arrays.asList(pieces)).anyTimes();
         EasyMock.replay(board);
         return board;
     }

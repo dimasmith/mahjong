@@ -1,6 +1,7 @@
 package net.anatolich.mahjong.mahjong;
 
 import java.util.Arrays;
+import java.util.Collections;
 import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.Piece;
 import net.anatolich.mahjong.game.Tile;
@@ -37,7 +38,10 @@ public class GameSessionImplTest {
         board = EasyMock.createMock("board", MutableBoard.class);
         rules = EasyMock.createMock("rules", Rules.class);
 
+        EasyMock.expect(board.getAllPieces()).andReturn(Collections.EMPTY_LIST).anyTimes(); // TODO Change this test
+        EasyMock.replay(board);
         session = new GameSessionImpl(board, rules);
+        EasyMock.reset(board);
 
     }
 
@@ -96,7 +100,7 @@ public class GameSessionImplTest {
         EasyMock.expectLastCall().once();
         setUpBoard(seasonWinterPiece, seasonSummerPiece);
 
-        EasyMock.expect(rules.isMoveLegal(coords2, coords1, board)).andReturn(true);
+        EasyMock.expect(rules.isMoveLegal(coords2, coords1, board)).andReturn(true).anyTimes();
 
         EasyMock.replay(rules);
 
@@ -158,7 +162,7 @@ public class GameSessionImplTest {
 
         setUpBoard(bambooOnePiece);
 
-        EasyMock.expect(rules.isPieceOpen(bambooOnePiece.getCoordinates(), board)).andReturn(true);
+        EasyMock.expect(rules.isPieceOpen(bambooOnePiece.getCoordinates(), board)).andReturn(true).anyTimes();
         EasyMock.replay(rules);
 
         session.pickPieceAt(bambooOnePiece.getCoordinates());
@@ -190,7 +194,7 @@ public class GameSessionImplTest {
         EasyMock.expectLastCall().once();
         setUpBoard(seasonWinterPiece, seasonSummerPiece);
 
-        EasyMock.expect(rules.isMoveLegal(coords2, coords1, board)).andReturn(true);
+        EasyMock.expect(rules.isMoveLegal(coords2, coords1, board)).andReturn(true).anyTimes();
 
         EasyMock.replay(rules);
 
