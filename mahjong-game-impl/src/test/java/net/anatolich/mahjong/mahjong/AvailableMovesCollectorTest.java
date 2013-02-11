@@ -68,8 +68,7 @@ public class AvailableMovesCollectorTest {
         
         
         final AvailableMove possibleMove = new AvailableMove(pa1, pa2);
-        final AvailableMove invertedPossibleMove = new AvailableMove(pa1, pa2);
-        assertThat(availableMoves, anyOf(hasItem(invertedPossibleMove), hasItem(possibleMove)));
+        assertThat(availableMoves, anyOf(hasItem(possibleMove)));
         assertThat(availableMoves.size(), is(1));
         
     }
@@ -94,13 +93,10 @@ public class AvailableMovesCollectorTest {
         List<AvailableMove> availableMoves = collector.collectMoves();
                 
         final AvailableMove possibleMove1 = new AvailableMove(pa1, pa2);
-        final AvailableMove invertedPossibleMove1 = new AvailableMove(pa1, pa2);
         
         final AvailableMove possibleMove2 = new AvailableMove(pb1, pb2);
-        final AvailableMove invertedPossibleMove2 = new AvailableMove(pb1, pb2);
         
-        assertThat(availableMoves, anyOf(hasItem(invertedPossibleMove1), hasItem(possibleMove1)));
-        assertThat(availableMoves, anyOf(hasItem(invertedPossibleMove2), hasItem(possibleMove2)));
+        assertThat(availableMoves, (hasItems(possibleMove1, possibleMove2)));
         assertThat(availableMoves.size(), is(2));
         
     }

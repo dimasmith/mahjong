@@ -4,7 +4,10 @@ import java.util.Objects;
 
 /**
  * Describes valid move containing start and end piece for move.
- *
+ * Available move should not care about pieces order inside it. 
+ * For example move with start piece of Bamboo One at 0,0,0 and end piece of Bamboo One at 8,0,0
+ * must be equal to one with start and end pieces swapped.
+ * It is also illegal to create AvailableMove instance for two pieces with equal coordinates.
  * @author Dmytro
  * @since 1.0
  * @version 1.0
@@ -14,6 +17,9 @@ public class AvailableMove {
     private final Piece startPiece, endPiece;
 
     public AvailableMove(Piece startPiece, Piece endPiece) {
+        if (startPiece.getCoordinates().equals(endPiece.getCoordinates())){
+            throw new IllegalStateException("Piece coordinates must not be equal");
+        }
         this.startPiece = startPiece;
         this.endPiece = endPiece;
     }
@@ -25,12 +31,15 @@ public class AvailableMove {
     public Piece getEndPiece() {
         return endPiece;
     }
+    
+    private AvailableMove invert(){
+        return new AvailableMove(endPiece, startPiece);
+    }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 37 * hash + Objects.hashCode(this.startPiece);
-        hash = 37 * hash + Objects.hashCode(this.endPiece);
+        hash = 37 * hash + (Objects.hashCode(this.startPiece) + Objects.hashCode(this.endPiece));
         return hash;
     }
 
@@ -42,11 +51,14 @@ public class AvailableMove {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final AvailableMove other = (AvailableMove) obj;
-        if (!Objects.equals(this.startPiece, other.startPiece)) {
+        AvailableMove otherMove = (AvailableMove) obj;
+        if (!Objects.equals(this.startPiece, otherMove.startPiece)) {            
+            otherMove = otherMove.invert();
+        }
+        if (!Objects.equals(this.startPiece, otherMove.startPiece)) {            
             return false;
         }
-        if (!Objects.equals(this.endPiece, other.endPiece)) {
+        if (!Objects.equals(this.endPiece, otherMove.endPiece)) {
             return false;
         }
         return true;

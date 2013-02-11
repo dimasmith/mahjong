@@ -18,6 +18,10 @@ public class Piece {
         this.tile = tile;
         this.coordinates = coordinates;
     }
+    
+    Piece( Tile.Type type, Tile.Value value, int x, int y, int z ) {
+        this(new Tile(type, value), new Coordinates(x, y, z));
+    }
 
     public Tile getTile() {
         return tile;
