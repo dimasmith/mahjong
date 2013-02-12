@@ -9,7 +9,7 @@ public interface GameSessionListener {
 
     void pickedPiecesChanged( GameEvent event );
 
-    void moveCompleted( GameEvent event );
+    void turnCompleted( GameEvent event );
 
     void noMovesLeft();
 

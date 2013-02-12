@@ -1,11 +1,13 @@
 package net.anatolich.mahjong.mahjong;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import net.anatolich.mahjong.game.AvailableMove;
 import net.anatolich.mahjong.game.Board;
 import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.GameSession;
+import net.anatolich.mahjong.game.GameSessionListener;
 import net.anatolich.mahjong.game.Piece;
 import net.anatolich.mahjong.game.rules.Rules;
 import net.anatolich.mahjong.game.spi.MutableBoard;
@@ -23,11 +25,13 @@ public class GameSessionImpl implements GameSession {
     private Piece pickedPiece;
     private final AvailableMovesCollector availableMovesCollector;
     private List<AvailableMove> availableMoves;
+    private final List<GameSessionListener> listeners;
 
     public GameSessionImpl(MutableBoard board, Rules rules) {
         this.board = board;
         this.rules = rules;
         this.availableMovesCollector = new AvailableMovesCollector(board, rules);
+        listeners = Collections.synchronizedList(new LinkedList<GameSessionListener>());
         calculateAvailableMoves();
     }
 
@@ -113,4 +117,16 @@ public class GameSessionImpl implements GameSession {
     private void calculateAvailableMoves() {
         this.availableMoves = availableMovesCollector.collectMoves();
     }
+
+    @Override
+    public void addListener(GameSessionListener listener) {
+        listeners.add(listener);
+    }
+
+    @Override
+    public void removeListener(GameSessionListener listener) {
+        listeners.remove(listener);
+    }
+    
+    
 }

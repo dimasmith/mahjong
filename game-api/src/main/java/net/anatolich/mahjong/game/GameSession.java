@@ -19,7 +19,10 @@ public interface GameSession {
     boolean hasMoreMoves();
 
     boolean isGameEnded();
-    
+
     List<AvailableMove> getAvailableMoves();
 
+    void addListener(GameSessionListener listener);
+
+    void removeListener(GameSessionListener listener);
 }

@@ -20,6 +20,7 @@ import net.anatolich.mahjong.game.BoardEvent;
 import net.anatolich.mahjong.game.BoardListener;
 import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.GameSession;
+import net.anatolich.mahjong.game.GameSessionListener;
 import net.anatolich.mahjong.game.Piece;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,6 +107,14 @@ public class BoardComponent extends JComponent {
         @Override
         public List<AvailableMove> getAvailableMoves() {
             return Collections.EMPTY_LIST;
+        }
+
+        @Override
+        public void addListener(GameSessionListener listener) {
+        }
+
+        @Override
+        public void removeListener(GameSessionListener listener) {
         }
 
     }
