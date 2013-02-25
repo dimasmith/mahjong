@@ -1,9 +1,11 @@
 package net.anatolich.mahjong.game;
 
 /**
- * Listens to game session events.
+ * Listens to game session events. 
  *
  * @author Dmytro Kovalchuk<dimasmith@gmail.com>
+ * @since 1.0
+ * @version 1.0
  */
 public interface GameSessionListener {
 

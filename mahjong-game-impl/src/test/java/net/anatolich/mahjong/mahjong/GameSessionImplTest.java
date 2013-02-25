@@ -2,7 +2,10 @@ package net.anatolich.mahjong.mahjong;
 
 import java.util.Arrays;
 import java.util.Collections;
+import net.anatolich.mahjong.game.AvailableMove;
 import net.anatolich.mahjong.game.Coordinates;
+import net.anatolich.mahjong.game.GameEvent;
+import net.anatolich.mahjong.game.GameSessionListener;
 import net.anatolich.mahjong.game.Piece;
 import net.anatolich.mahjong.game.Tile;
 import net.anatolich.mahjong.game.rules.Rules;
@@ -12,8 +15,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static net.anatolich.mahjong.test.GameSessionMatcher.*;
+import net.anatolich.mahjong.test.PieceBuilder;
+import static net.anatolich.mahjong.test.PieceBuilder.makePiece;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
+import org.junit.After;
 
 /**
  * Tests session implementation for correct behavior.
@@ -32,6 +38,7 @@ public class GameSessionImplTest {
     private GameSessionImpl session;
     private MutableBoard board;
     private Rules rules;
+    private GameSessionListener listener;
 
     @Before
     public void setUp() {
@@ -42,7 +49,15 @@ public class GameSessionImplTest {
         EasyMock.replay(board);
         session = new GameSessionImpl(board, rules);
         EasyMock.reset(board);
-
+        
+        listener = EasyMock.createMock("listener", GameSessionListener.class);
+        session.addListener(listener);
+        
+    }
+    
+    @After
+    public void tearDown(){
+        session.removeListener(listener);
     }
 
     /**
@@ -78,14 +93,22 @@ public class GameSessionImplTest {
         EasyMock.expect(rules.isPieceOpen(coords1, board)).andReturn(true);
 
         EasyMock.replay(rules);
+        
+        final GameEvent event = new GameEvent(GameEvent.Type.SELECTION_CHANGED, session, bambooOnePiece);        
+        listener.pickedPiecesChanged(event);
+        EasyMock.replay(listener);
 
         session.pickPieceAt(coords1);
 
         assertThat(session, allOf(hasPickedPieces(), moveWasNotCompleted()));
         assertThat(session.getPickedPieces(), hasItem(bambooOnePiece));
 
+        EasyMock.verify(listener);
     }
 
+    /**
+     * Tests scenario that leads to valid mahjong move.
+     */
     @Test
     public void testPickPieceAt_PickedAllowed() {
         final Piece seasonWinterPiece = new Piece(seasonWinter, coords2);
@@ -103,11 +126,16 @@ public class GameSessionImplTest {
         EasyMock.expect(rules.isMoveLegal(coords2, coords1, board)).andReturn(true).anyTimes();
 
         EasyMock.replay(rules);
-
+        
+        EasyMock.reset(listener);
+        final GameEvent event = new GameEvent(GameEvent.Type.TURN_COMPLETED, session, seasonWinterPiece, seasonSummerPiece);
+        listener.turnCompleted(event);
+        EasyMock.replay(listener);
+        
         session.pickPieceAt(coords1);
 
         assertThat(session, allOf(noPiecesArePicked(), moveWasCompleted()));
-        EasyMock.verify(board);
+        EasyMock.verify(board, listener);   
     }
 
     @Test
@@ -169,6 +197,69 @@ public class GameSessionImplTest {
 
         assertThat(session, moveWasNotCompleted());
         EasyMock.verify(board);
+    }
+    
+    @Test
+    public void testGameWon(){
+        final Piece piece1 = makePiece().bamboo().one().at(0, 0, 0);
+        final Piece piece2 = makePiece().bamboo().one().at(2, 0, 0);
+        session.setStartPiece(piece1);
+        session.setEndPiece(piece2);
+        
+        EasyMock.reset(board);
+        board.removePieceAt(EasyMock.anyObject(Coordinates.class));
+        EasyMock.expectLastCall().anyTimes();
+        EasyMock.expect(board.getAllPieces()).andReturn(Collections.EMPTY_LIST); // No more pieces left
+        EasyMock.replay(board);
+        
+        listener.turnCompleted(EasyMock.anyObject(GameEvent.class));
+        listener.gameWon();
+        EasyMock.replay(listener);
+        
+        session.completeMove();
+        
+        EasyMock.verify(listener);
+        
+    }
+    
+    @Test
+    public void testGameLost(){
+        
+        final Piece piece1 = makePiece().bamboo().one().at(0, 0, 0);
+        final Piece piece2 = makePiece().bamboo().one().at(4, 0, 0);
+        
+        final Piece piece3 = makePiece().bamboo().two().at(2, 0, 0);
+        final Piece piece4 = makePiece().bamboo().three().at(6, 0, 0);
+        
+        AvailableMove move = new AvailableMove(piece1, piece2);
+        AvailableMovesCollector availableMovesCollector = EasyMock.createMock("availableMovesCollector", AvailableMovesCollector.class);
+        EasyMock.expect(availableMovesCollector.collectMoves()).andReturn(Arrays.asList(new AvailableMove[]{move}));
+        EasyMock.replay(availableMovesCollector);
+        
+        session = new GameSessionImpl(board, rules, availableMovesCollector);        
+        
+        session.setStartPiece(piece1);
+        session.setEndPiece(piece2);
+        
+        EasyMock.reset(board);
+        board.removePieceAt(EasyMock.anyObject(Coordinates.class));
+        EasyMock.expectLastCall().anyTimes();
+        EasyMock.expect(board.getAllPieces()).andReturn(Arrays.asList(new Piece[] {piece3, piece4 })); // Some pieces left
+        EasyMock.replay(board);
+        
+        EasyMock.reset(availableMovesCollector);
+        EasyMock.expect(availableMovesCollector.collectMoves()).andReturn(Collections.EMPTY_LIST);
+        EasyMock.replay(availableMovesCollector);
+        
+        listener.turnCompleted(EasyMock.anyObject(GameEvent.class));
+        listener.noMovesLeft();
+        EasyMock.replay(listener);
+        
+        session.addListener(listener);
+        session.completeMove();
+        
+        EasyMock.verify(listener);
+        
     }
 
     private void setUpBoard( final Piece... pieces ) {

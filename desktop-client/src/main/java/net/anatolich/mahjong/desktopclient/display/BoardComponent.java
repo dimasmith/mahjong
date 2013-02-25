@@ -14,11 +14,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import net.anatolich.mahjong.game.AvailableMove;
 import net.anatolich.mahjong.game.Board;
 import net.anatolich.mahjong.game.BoardEvent;
 import net.anatolich.mahjong.game.BoardListener;
 import net.anatolich.mahjong.game.Coordinates;
+import net.anatolich.mahjong.game.GameEvent;
 import net.anatolich.mahjong.game.GameSession;
 import net.anatolich.mahjong.game.GameSessionListener;
 import net.anatolich.mahjong.game.Piece;
@@ -29,8 +31,10 @@ import org.slf4j.LoggerFactory;
  *
  * @author Dmytro Kovalchuk<dimasmith@gmail.com>
  */
-public class BoardComponent extends JComponent {
+public class BoardComponent extends JComponent implements GameSessionListener {
 
+    private static final Logger log = LoggerFactory.getLogger(BoardComponent.class);
+    
     private GameSession session;
     private Board board;
     private BoardView renderer;
@@ -69,6 +73,29 @@ public class BoardComponent extends JComponent {
         this.board = game.getBoard();
         this.renderer = new BoardView(game, this);
         board.addChangeListener(renderer);
+        session.addListener(this);
+    }
+
+    @Override
+    public void pickedPiecesChanged(GameEvent event) {
+        repaint();
+    }
+
+    @Override
+    public void turnCompleted(GameEvent event) {
+        int movesLeft = event.getSource().getAvailableMoves().size();
+        log.debug(String.format("%s moves left.", movesLeft));
+        repaint();
+    }
+
+    @Override
+    public void noMovesLeft() {
+        JOptionPane.showMessageDialog(this, "No moves left in this game");
+    }
+
+    @Override
+    public void gameWon() {
+        JOptionPane.showMessageDialog(this, "Congratulations! You have won!");
     }
 
     private static class DummyGameSession implements GameSession {
