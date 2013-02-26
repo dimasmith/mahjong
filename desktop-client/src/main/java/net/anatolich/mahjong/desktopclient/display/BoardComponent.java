@@ -48,7 +48,6 @@ public class BoardComponent extends JComponent implements GameSessionListener {
             public void mousePressed( MouseEvent e ) {
                 if ( e.getButton() == MouseEvent.BUTTON1 ) {
                     renderer.clickOn(e.getX(), e.getY());
-                    repaint();
                 }
             }
         });

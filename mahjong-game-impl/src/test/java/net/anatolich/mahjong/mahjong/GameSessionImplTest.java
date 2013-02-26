@@ -6,6 +6,7 @@ import net.anatolich.mahjong.game.AvailableMove;
 import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.GameEvent;
 import net.anatolich.mahjong.game.GameSessionListener;
+import net.anatolich.mahjong.game.MoveCompletedEvent;
 import net.anatolich.mahjong.game.Piece;
 import net.anatolich.mahjong.game.Tile;
 import net.anatolich.mahjong.game.rules.Rules;
@@ -15,11 +16,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static net.anatolich.mahjong.test.GameSessionMatcher.*;
-import net.anatolich.mahjong.test.PieceBuilder;
 import static net.anatolich.mahjong.test.PieceBuilder.makePiece;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
 import org.junit.After;
+
 
 /**
  * Tests session implementation for correct behavior.
@@ -70,13 +71,15 @@ public class GameSessionImplTest {
 
         setUpBoard(bambooOnePiece);
 
-        EasyMock.expect(rules.isPieceOpen(coords1, board)).andReturn(false);
+        EasyMock.expect(rules.isPieceOpen(bambooOnePiece.getCoordinates(), board)).andReturn(false);
 
         EasyMock.replay(rules);
+        EasyMock.replay(listener); // Nothing should happen to listener
 
-        session.pickPieceAt(coords1);
+        session.pickPieceAt(bambooOnePiece.getCoordinates());
 
         assertThat(session, allOf(not(hasPickedPieces()), not(moveWasCompleted())));
+        EasyMock.verify(listener);
 
     }
 
@@ -86,22 +89,22 @@ public class GameSessionImplTest {
      */
     @Test
     public void testPickPieceAt_EmptySelectable() {
-        final Piece bambooOnePiece = new Piece(bambooOne, coords1);
+        final Piece newPiece = makePiece().bamboo().one().at(0, 0, 0);
 
-        setUpBoard(bambooOnePiece);
+        setUpBoard(newPiece);
 
-        EasyMock.expect(rules.isPieceOpen(coords1, board)).andReturn(true);
+        pieceIsOpen(newPiece);
 
         EasyMock.replay(rules);
         
-        final GameEvent event = new GameEvent(GameEvent.Type.SELECTION_CHANGED, session, bambooOnePiece);        
+        final GameEvent event = new GameEvent(GameEvent.Type.SELECTION_CHANGED, session, newPiece);        
         listener.pickedPiecesChanged(event);
         EasyMock.replay(listener);
 
-        session.pickPieceAt(coords1);
+        session.pickPieceAt(newPiece.getCoordinates());
 
         assertThat(session, allOf(hasPickedPieces(), moveWasNotCompleted()));
-        assertThat(session.getPickedPieces(), hasItem(bambooOnePiece));
+        assertThat(session.getPickedPieces(), hasItem(newPiece));
 
         EasyMock.verify(listener);
     }
@@ -111,28 +114,28 @@ public class GameSessionImplTest {
      */
     @Test
     public void testPickPieceAt_PickedAllowed() {
-        final Piece seasonWinterPiece = new Piece(seasonWinter, coords2);
+        final Piece pickedPiece = new Piece(seasonWinter, coords2);
 
-        session.setPickedPiece(seasonWinterPiece);
+        session.pickPiece(pickedPiece);
 
-        final Piece seasonSummerPiece = new Piece(seasonSummer, coords1);
+        final Piece newPiece = new Piece(seasonSummer, coords1);
 
-        board.removePieceAt(coords1);
+        board.removePieceAt(newPiece.getCoordinates());
         EasyMock.expectLastCall().once();
-        board.removePieceAt(coords2);
+        board.removePieceAt(pickedPiece.getCoordinates());
         EasyMock.expectLastCall().once();
-        setUpBoard(seasonWinterPiece, seasonSummerPiece);
+        setUpBoard(pickedPiece, newPiece);
 
-        EasyMock.expect(rules.isMoveLegal(coords2, coords1, board)).andReturn(true).anyTimes();
+        EasyMock.expect(rules.isMoveLegal(pickedPiece.getCoordinates(), newPiece.getCoordinates(), board)).andReturn(true).anyTimes();
 
         EasyMock.replay(rules);
         
         EasyMock.reset(listener);
-        final GameEvent event = new GameEvent(GameEvent.Type.TURN_COMPLETED, session, seasonWinterPiece, seasonSummerPiece);
+        final GameEvent event = new MoveCompletedEvent(session, pickedPiece, newPiece);
         listener.turnCompleted(event);
         EasyMock.replay(listener);
         
-        session.pickPieceAt(coords1);
+        session.pickPieceAt(newPiece.getCoordinates());
 
         assertThat(session, allOf(noPiecesArePicked(), moveWasCompleted()));
         EasyMock.verify(board, listener);   
@@ -140,45 +143,45 @@ public class GameSessionImplTest {
 
     @Test
     public void testPickPieceAt_PickedDeniedBlocked() {
-        final Piece selectedTile = new Piece(seasonWinter, coords2);
+        final Piece pickedPiece = new Piece(seasonWinter, coords2);
 
-        session.setPickedPiece(selectedTile);
+        session.pickPiece(pickedPiece);
 
-        final Piece newTile = new Piece(seasonSummer, coords1);
+        final Piece newPiece = new Piece(seasonSummer, coords1);
 
-        setUpBoard(selectedTile, newTile);
+        setUpBoard(pickedPiece, newPiece);
 
-        EasyMock.expect(rules.isMoveLegal(selectedTile.getCoordinates(), newTile.getCoordinates(), board)).andReturn(false);
-        EasyMock.expect(rules.isPieceOpen(newTile.getCoordinates(), board)).andReturn(false);
+        moveIsIllegal(pickedPiece, newPiece);
+        EasyMock.expect(rules.isPieceOpen(newPiece.getCoordinates(), board)).andReturn(false);
 
         EasyMock.replay(rules);
 
-        session.pickPieceAt(newTile.getCoordinates());
+        session.pickPieceAt(newPiece.getCoordinates());
 
         assertThat(session, allOf(hasPickedPieces(), moveWasNotCompleted()));
-        assertThat(session.getPickedPieces(), hasItem(selectedTile));
+        assertThat(session.getPickedPieces(), hasItem(pickedPiece));
 
     }
 
     @Test
     public void testPickPieceAt_PickedDeniedOpen() {
-        final Piece selectedTile = new Piece(seasonWinter, coords2);
+        final Piece selectedPiece = new Piece(seasonWinter, coords2);
 
-        session.setPickedPiece(selectedTile);
+        session.pickPiece(selectedPiece);
 
-        final Piece newTile = new Piece(seasonSummer, coords1);
+        final Piece newPiece = new Piece(seasonSummer, coords1);
 
-        setUpBoard(selectedTile, newTile);
+        setUpBoard(selectedPiece, newPiece);
 
-        EasyMock.expect(rules.isMoveLegal(selectedTile.getCoordinates(), newTile.getCoordinates(), board)).andReturn(false);
-        EasyMock.expect(rules.isPieceOpen(newTile.getCoordinates(), board)).andReturn(true);
+        moveIsIllegal(selectedPiece, newPiece);
+        pieceIsOpen(newPiece);
 
         EasyMock.replay(rules);
 
-        session.pickPieceAt(newTile.getCoordinates());
+        session.pickPieceAt(newPiece.getCoordinates());
 
         assertThat(session, allOf(hasPickedPieces(), moveWasNotCompleted()));
-        assertThat(session.getPickedPieces(), hasItem(newTile));
+        assertThat(session.getPickedPieces(), hasItem(newPiece));
 
     }
 
@@ -203,8 +206,6 @@ public class GameSessionImplTest {
     public void testGameWon(){
         final Piece piece1 = makePiece().bamboo().one().at(0, 0, 0);
         final Piece piece2 = makePiece().bamboo().one().at(2, 0, 0);
-        session.setStartPiece(piece1);
-        session.setEndPiece(piece2);
         
         EasyMock.reset(board);
         board.removePieceAt(EasyMock.anyObject(Coordinates.class));
@@ -216,10 +217,9 @@ public class GameSessionImplTest {
         listener.gameWon();
         EasyMock.replay(listener);
         
-        session.completeMove();
+        session.completeMove(piece1, piece2);
         
-        EasyMock.verify(listener);
-        
+        EasyMock.verify(listener);        
     }
     
     @Test
@@ -238,9 +238,6 @@ public class GameSessionImplTest {
         
         session = new GameSessionImpl(board, rules, availableMovesCollector);        
         
-        session.setStartPiece(piece1);
-        session.setEndPiece(piece2);
-        
         EasyMock.reset(board);
         board.removePieceAt(EasyMock.anyObject(Coordinates.class));
         EasyMock.expectLastCall().anyTimes();
@@ -256,7 +253,7 @@ public class GameSessionImplTest {
         EasyMock.replay(listener);
         
         session.addListener(listener);
-        session.completeMove();
+        session.completeMove(piece1, piece2);
         
         EasyMock.verify(listener);
         
@@ -278,7 +275,7 @@ public class GameSessionImplTest {
         final Piece seasonWinterPiece = new Piece(seasonWinter, coords2);
         final Piece seasonSummerPiece = new Piece(seasonSummer, coords1);
 
-        session.setPickedPiece(seasonWinterPiece);
+        session.pickPiece(seasonWinterPiece);
         board.removePieceAt(coords1);
         EasyMock.expectLastCall().once();
         board.removePieceAt(coords2);
@@ -295,4 +292,15 @@ public class GameSessionImplTest {
         EasyMock.reset(board);
         EasyMock.reset(rules);
     }
+
+    private void moveIsIllegal(final Piece selectedPiece, final Piece newPiece) {
+        EasyMock.expect(rules.isMoveLegal(selectedPiece.getCoordinates(), newPiece.getCoordinates(), board)).andReturn(false);
+    }
+
+    private void pieceIsOpen(final Piece newPiece) {
+        EasyMock.expect(rules.isPieceOpen(newPiece.getCoordinates(), board)).andReturn(true);
+    }
+}
+class SessionBuilder {
+    private GameSessionImpl session;
 }

@@ -75,6 +75,4 @@ public class GameEvent {
     public String toString() {
         return "GameEvent{" + "type=" + type + ", pieces=" + pieces + ", source=" + source + '}';
     }
-    
-    
 }
