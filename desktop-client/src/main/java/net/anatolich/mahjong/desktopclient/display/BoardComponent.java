@@ -24,6 +24,7 @@ import net.anatolich.mahjong.game.GameEvent;
 import net.anatolich.mahjong.game.GameSession;
 import net.anatolich.mahjong.game.GameSessionListener;
 import net.anatolich.mahjong.game.Piece;
+import net.anatolich.mahjong.game.capabilities.Capabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +35,6 @@ import org.slf4j.LoggerFactory;
 public class BoardComponent extends JComponent implements GameSessionListener {
 
     private static final Logger log = LoggerFactory.getLogger(BoardComponent.class);
-    
     private GameSession session;
     private Board board;
     private BoardView renderer;
@@ -45,8 +45,8 @@ public class BoardComponent extends JComponent implements GameSessionListener {
 
         addMouseListener(new MouseAdapter() {
             @Override
-            public void mousePressed( MouseEvent e ) {
-                if ( e.getButton() == MouseEvent.BUTTON1 ) {
+            public void mousePressed(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
                     renderer.clickOn(e.getX(), e.getY());
                 }
             }
@@ -54,8 +54,8 @@ public class BoardComponent extends JComponent implements GameSessionListener {
     }
 
     @Override
-    protected void paintComponent( Graphics g ) {
-        renderer.draw(( Graphics2D ) g);
+    protected void paintComponent(Graphics g) {
+        renderer.draw((Graphics2D) g);
 
     }
 
@@ -67,7 +67,7 @@ public class BoardComponent extends JComponent implements GameSessionListener {
         return session;
     }
 
-    public void setGameSession( GameSession game ) {
+    public void setGameSession(GameSession game) {
         this.session = game;
         this.board = game.getBoard();
         this.renderer = new BoardView(game, this);
@@ -100,6 +100,7 @@ public class BoardComponent extends JComponent implements GameSessionListener {
     private static class DummyGameSession implements GameSession {
 
         private static final EmptyBoard EMPTY_BOARD = new EmptyBoard();
+        private final CapabilitiesImpl dummyCapabilities = new CapabilitiesImpl();
 
         @Override
         public Board getBoard() {
@@ -117,7 +118,7 @@ public class BoardComponent extends JComponent implements GameSessionListener {
         }
 
         @Override
-        public void pickPieceAt( Coordinates coordinates ) {
+        public void pickPieceAt(Coordinates coordinates) {
         }
 
         @Override
@@ -143,6 +144,25 @@ public class BoardComponent extends JComponent implements GameSessionListener {
         public void removeListener(GameSessionListener listener) {
         }
 
+        @Override
+        public Capabilities capabilities() {
+            return dummyCapabilities;
+        }
+
+        private static class CapabilitiesImpl implements Capabilities {
+
+            public CapabilitiesImpl() {
+            }
+            @Override
+            public <T> T get(Class<T> capability) {
+                return null;
+            }
+
+            @Override
+            public boolean supports(Class<?> capability) {
+                return false;
+            }
+        }
     }
 
     private static class EmptyBoard implements Board {
@@ -153,21 +173,21 @@ public class BoardComponent extends JComponent implements GameSessionListener {
         }
 
         @Override
-        public Piece getTopmostPieceAt( int x, int y ) {
+        public Piece getTopmostPieceAt(int x, int y) {
             return null;
         }
 
         @Override
-        public Piece getPieceAt( Coordinates coordinates ) {
+        public Piece getPieceAt(Coordinates coordinates) {
             return null;
         }
 
         @Override
-        public void addChangeListener( BoardListener listener ) {
+        public void addChangeListener(BoardListener listener) {
         }
 
         @Override
-        public void removeChangeListener( BoardListener listener ) {
+        public void removeChangeListener(BoardListener listener) {
         }
     }
 
@@ -182,7 +202,6 @@ public class BoardComponent extends JComponent implements GameSessionListener {
         private Board board;
         private int height;
         private int width;
-        
         private PieceRenderer pieceRenderer = new PieceRenderer(TILE_WIDTH, TILE_HEIGHT);
         private List<Piece> renderingQueue; // Contains pieces in order it should be rendered
         private final int boardWidth;
@@ -191,14 +210,14 @@ public class BoardComponent extends JComponent implements GameSessionListener {
         public BoardView(GameSession session, JComponent canvas) {
             this.session = session;
             this.board = session.getBoard();
-            
+
             this.width = canvas.getWidth();
             this.height = canvas.getHeight();
-            
+
             Dimension boardSize = calculateBoardSize(board);
             boardWidth = (int) (boardSize.getWidth() / 2 * TILE_WIDTH) + 1;
             boardHeight = (int) (boardSize.getHeight() / 2 * TILE_HEIGHT) + 1;
-            
+
             queuePiecesForRendering();
         }
 
@@ -287,32 +306,32 @@ public class BoardComponent extends JComponent implements GameSessionListener {
             int minY = Integer.MAX_VALUE;
             int maxX = Integer.MIN_VALUE;
             int maxY = Integer.MIN_VALUE;
-            
+
             for (Piece piece : board.getAllPieces()) {
                 Coordinates c = piece.getCoordinates();
                 final int x = c.getX();
                 final int y = c.getY();
-                
+
                 if (x < minX) {
                     minX = x;
                 }
-                
-                if (x > maxX){
+
+                if (x > maxX) {
                     maxX = x;
                 }
-                
+
                 if (y < minY) {
                     minY = y;
                 }
-                
-                if (y > maxY){
+
+                if (y > maxY) {
                     maxY = y;
                 }
             }
             final int boardWidth = maxX - minX;
             final int boardHeight = maxY - minY;
             return new Dimension(boardWidth, boardHeight);
-            
+
         }
 
         private static class LayerPieceComparator implements Comparator<Piece> {
