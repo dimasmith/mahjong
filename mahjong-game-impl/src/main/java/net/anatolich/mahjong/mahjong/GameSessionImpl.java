@@ -80,17 +80,12 @@ public class GameSessionImpl extends AbstractGameSession {
 
     @Override
     public boolean hasMoreMoves() {
-        return !getAvailableMoves().isEmpty();
+        return !availableMoves().isEmpty();
     }
 
     @Override
     public boolean isGameEnded() {
         return isGameWon();
-    }
-
-    @Override
-    public List<AvailableMove> getAvailableMoves() {
-        return availableMoves;
     }
 
     final void startGame() {
@@ -136,5 +131,9 @@ public class GameSessionImpl extends AbstractGameSession {
 
     private boolean noPickedPieces() {
         return pickedPieces.isEmpty();
+    }
+
+    private List<AvailableMove> availableMoves() {
+        return availableMoves;
     }
 }

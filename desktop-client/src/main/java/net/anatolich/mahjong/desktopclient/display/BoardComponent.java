@@ -15,7 +15,6 @@ import java.util.Comparator;
 import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
-import net.anatolich.mahjong.game.AvailableMove;
 import net.anatolich.mahjong.game.Board;
 import net.anatolich.mahjong.game.BoardEvent;
 import net.anatolich.mahjong.game.BoardListener;
@@ -82,8 +81,6 @@ public class BoardComponent extends JComponent implements GameSessionListener {
 
     @Override
     public void turnCompleted(GameEvent event) {
-        int movesLeft = event.getSource().getAvailableMoves().size();
-        log.debug(String.format("%s moves left.", movesLeft));
         repaint();
     }
 
@@ -129,11 +126,6 @@ public class BoardComponent extends JComponent implements GameSessionListener {
         @Override
         public boolean isGameEnded() {
             return false;
-        }
-
-        @Override
-        public List<AvailableMove> getAvailableMoves() {
-            return Collections.EMPTY_LIST;
         }
 
         @Override
