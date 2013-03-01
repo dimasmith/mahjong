@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.anatolich.mahjong</groupId>
     <artifactId>mahjong</artifactId>
-    <version>0.1</version>
+    <version>0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>mahjong</name>
     <url>https://github.com/dimasmith/mahjong</url>
@@ -19,7 +19,7 @@
         <connection>scm:git:ssh://git@github.com/dimasmith/mahjong.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/dimasmith/mahjong.git</developerConnection>
         <url>https://github.com/dimasmith/mahjong</url>
-      <tag>rel-0.1</tag>
+      <tag>HEAD</tag>
   </scm>
             
 
