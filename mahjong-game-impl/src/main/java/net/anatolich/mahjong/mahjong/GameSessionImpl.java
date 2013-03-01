@@ -1,10 +1,7 @@
 package net.anatolich.mahjong.mahjong;
 
-import net.anatolich.mahjong.game.spi.AbstractGameSession;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 import net.anatolich.mahjong.game.AvailableMove;
@@ -13,12 +10,15 @@ import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.GameEvent;
 import net.anatolich.mahjong.game.Piece;
 import net.anatolich.mahjong.game.rules.Rules;
+import net.anatolich.mahjong.game.spi.AbstractGameSession;
 import net.anatolich.mahjong.game.spi.MutableBoard;
 
 /**
  * Game session keeps track of game and allows player to interact with game.
  *
  * @author Dmytro Kovalchuk<dimasmith@gmail.com>
+ * @version 1.0
+ * @since 1.0
  */
 public class GameSessionImpl extends AbstractGameSession {
 
@@ -99,11 +99,7 @@ public class GameSessionImpl extends AbstractGameSession {
         }
     }
 
-    void completeMove(Piece... pieces) {
-        completeMove(Arrays.asList(pieces));
-    }
-
-    void pickPiece(final Piece piece) {
+    private void pickPiece(final Piece piece) {
         pickedPieces.push(piece);
         firePiecePickedEvent();
     }
@@ -119,18 +115,18 @@ public class GameSessionImpl extends AbstractGameSession {
     }
 
     @Override
-    protected boolean isGameWon() {
+    protected final boolean isGameWon() {
         return board.getAllPieces().isEmpty();
     }
 
     @Override
-    protected boolean isMovesAvailable() {
+    protected final boolean isMovesAvailable() {
         this.availableMoves = availableMovesCollector.collectMoves();
         return availableMoves.isEmpty();
     }
 
     @Override
-    protected void doMove(List<Piece> affectedPieces) {
+    protected final void doMove(List<Piece> affectedPieces) {
         for (Piece piece : affectedPieces) {
             board.removePieceAt(piece.getCoordinates());
         }
