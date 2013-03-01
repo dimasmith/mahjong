@@ -19,9 +19,8 @@
         <connection>scm:git:ssh://git@github.com/dimasmith/mahjong.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/dimasmith/mahjong.git</developerConnection>
         <url>https://github.com/dimasmith/mahjong</url>
-      <tag>HEAD</tag>
-  </scm>
-            
+        <tag>HEAD</tag>
+    </scm>
 
     <build>
         <plugins>
@@ -86,4 +85,8 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 </project>

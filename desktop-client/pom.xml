@@ -9,9 +9,7 @@
   <artifactId>desktop-client</artifactId>
   <name>desktop-client</name>
   <url>http://maven.apache.org</url>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+  
     <description>Desktop client for mahjong engine</description>
     <dependencies>
         <dependency>
@@ -23,18 +21,18 @@
             <artifactId>easymock</artifactId>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>net.anatolich.mahjong</groupId>
             <artifactId>game-api</artifactId>
-            <version>${project.version}</version>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>net.anatolich.mahjong</groupId>
             <artifactId>mahjong-game-impl</artifactId>
-            <version>${project.version}</version>
+            <version>0.2-SNAPSHOT</version>
             <scope>runtime</scope>
         </dependency>
     </dependencies>
