@@ -12,8 +12,15 @@
         <module>desktop-client</module>
         <module>game-spi</module>
         <module>mahjong-game-impl</module>
-    <module>test</module>
-  </modules>
+        <module>test</module>
+    </modules>
+    
+    <scm>
+        <connection>scm:git:ssh://github.com:dimasmith/mahjong.git</connection>
+        <developerConnection>scm:git:ssh://github.com:dimasmith/mahjong.git</developerConnection>
+        <url>https://github.com/dimasmith/mahjong</url>
+    </scm>
+            
 
     <build>
         <plugins>
