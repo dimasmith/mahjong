@@ -12,8 +12,15 @@
         <module>desktop-client</module>
         <module>game-spi</module>
         <module>mahjong-game-impl</module>
-    <module>test</module>
-  </modules>
+        <module>test</module>
+    </modules>
+    
+    <scm>
+        <connection>scm:git:ssh://git@github.com/dimasmith/mahjong.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/dimasmith/mahjong.git</developerConnection>
+        <url>https://github.com/dimasmith/mahjong</url>
+    </scm>
+            
 
     <build>
         <plugins>
@@ -45,6 +52,14 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <tagNameFormat>rel-@{project.version}</tagNameFormat>
+                </configuration>
             </plugin>
         </plugins>
     </build>
