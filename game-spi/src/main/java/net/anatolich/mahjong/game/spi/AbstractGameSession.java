@@ -8,13 +8,18 @@ import net.anatolich.mahjong.game.GameSession;
 import net.anatolich.mahjong.game.GameSessionListener;
 import net.anatolich.mahjong.game.MoveCompletedEvent;
 import net.anatolich.mahjong.game.Piece;
+import net.anatolich.mahjong.game.capabilities.Capabilities;
+import net.anatolich.mahjong.game.impl.CapabilitiesImpl;
 
 /**
  * Abstract superclass of Game Session implementations
+ *
  * @author Dmytro
  */
 public abstract class AbstractGameSession implements GameSession {
+
     protected final List<GameSessionListener> listeners = new LinkedList<>();
+    private final CapabilitiesImpl capabilities = new CapabilitiesImpl();
 
     @Override
     public final void addListener(GameSessionListener listener) {
@@ -25,13 +30,13 @@ public abstract class AbstractGameSession implements GameSession {
     public final void removeListener(GameSessionListener listener) {
         listeners.remove(listener);
     }
-    
+
     protected final void fireGameWon() {
         for (GameSessionListener listener : listeners) {
             listener.gameWon();
         }
     }
-    
+
     protected final void fireMoveCompleted(Collection<Piece> pieces) {
         final GameEvent event = new MoveCompletedEvent(this, pieces);
         fireTurnCompleted(event);
@@ -48,7 +53,6 @@ public abstract class AbstractGameSession implements GameSession {
             gameSessionListener.pickedPiecesChanged(event);
         }
     }
-    
 
     protected final void fireTurnCompleted(final GameEvent event) {
         for (GameSessionListener gameSessionListener : listeners) {
@@ -58,21 +62,24 @@ public abstract class AbstractGameSession implements GameSession {
 
     /**
      * Checks whether game is won by preceding move.
+     *
      * @return true when game is won.
      */
     protected abstract boolean isGameWon();
 
     /**
-     * Checks whether any legal moves are available. This method normally won't be called 
-     * if {@link #isGameWon()} returned true.
+     * Checks whether any legal moves are available. This method normally won't
+     * be called if {@link #isGameWon()} returned true.
+     *
      * @return true when there is at least one valid move.
      */
     protected abstract boolean isMovesAvailable();
 
     /**
-     * Called to make all necessary manipulations with board, selection, score e.t.c 
-     * when legal move is performed.
-     * @param affectedPieces 
+     * Called to make all necessary manipulations with board, selection, score
+     * e.t.c when legal move is performed.
+     *
+     * @param affectedPieces
      */
     protected abstract void doMove(List<Piece> affectedPieces);
 
@@ -86,6 +93,11 @@ public abstract class AbstractGameSession implements GameSession {
         }
     }
 
-    
-    
+    public final Capabilities capabilities() {
+        return capabilities;
+    }
+
+    protected final <T> void register(T capability) {
+        capabilities.register(capability);
+    }
 }

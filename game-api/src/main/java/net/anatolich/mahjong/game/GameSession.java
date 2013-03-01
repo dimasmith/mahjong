@@ -1,6 +1,7 @@
 package net.anatolich.mahjong.game;
 
 import java.util.List;
+import net.anatolich.mahjong.game.capabilities.Capabilities;
 
 /**
  * Controls game session from start to end.
@@ -22,9 +23,9 @@ public interface GameSession {
 
     boolean isGameEnded();
 
-    List<AvailableMove> getAvailableMoves();
-
     void addListener(GameSessionListener listener);
 
     void removeListener(GameSessionListener listener);
+
+    Capabilities capabilities();
 }
