@@ -1,10 +1,9 @@
 package net.anatolich.mahjong.game;
 
 import org.easymock.EasyMock;
-import org.junit.Test;
-
-import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.*;
+import org.junit.Test;
 
 /**
  *
@@ -40,13 +39,5 @@ public class BoardEventTest {
 
         assertThat("Affected pieces list does not contain all items", evt.getPieces(), hasItems(firstPiece, secontPiece));
         assertThat("Selected piece must be null", evt.getPiece(), is(firstPiece));
-    }
-
-    @Test
-    public void testConstructorAssignment_NullPieces() {
-        BoardEvent evt = new BoardEvent(BoardEvent.Type.PIECES_ADDED, board, null);
-
-        assertThat("Affected pieces list does not contain all items", evt.getPieces().isEmpty(), is(true));
-        assertThat("Selected piece must be null", evt.getPiece(), nullValue());
     }
 }
