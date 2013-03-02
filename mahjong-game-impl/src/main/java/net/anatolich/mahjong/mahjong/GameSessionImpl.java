@@ -1,14 +1,16 @@
 package net.anatolich.mahjong.mahjong;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 import net.anatolich.mahjong.game.AvailableMove;
 import net.anatolich.mahjong.game.Board;
 import net.anatolich.mahjong.game.Coordinates;
 import net.anatolich.mahjong.game.GameEvent;
+import net.anatolich.mahjong.game.GameSessionListener;
 import net.anatolich.mahjong.game.Piece;
+import net.anatolich.mahjong.game.capabilities.Hints;
+import net.anatolich.mahjong.game.impl.HintsImpl;
 import net.anatolich.mahjong.game.rules.Rules;
 import net.anatolich.mahjong.game.spi.AbstractGameSession;
 import net.anatolich.mahjong.game.spi.MutableBoard;
@@ -28,6 +30,7 @@ public class GameSessionImpl extends AbstractGameSession {
     private final AvailableMovesCollector availableMovesCollector;
     private List<AvailableMove> availableMoves;
     private Stack<Piece> pickedPieces = new Stack<>();
+    private final HintsImpl hints = new HintsImpl();
 
     public GameSessionImpl(MutableBoard board, Rules rules) {
         this(board, rules, new AvailableMovesCollector(board, rules));
@@ -36,7 +39,7 @@ public class GameSessionImpl extends AbstractGameSession {
     GameSessionImpl(MutableBoard board, Rules rules, AvailableMovesCollector availableMovesCollector) {
         this.board = board;
         this.rules = rules;
-        this.availableMovesCollector = availableMovesCollector;
+        this.availableMovesCollector = availableMovesCollector;        
         startGame();
     }
 
@@ -89,9 +92,11 @@ public class GameSessionImpl extends AbstractGameSession {
     }
 
     final void startGame() {
+        registerCapability(hints, Hints.class);
         if (isMovesAvailable()) {
             fireNoMovesLeft();
         }
+        hints.setHints(availableMoves);
     }
 
     private void pickPiece(final Piece piece) {
@@ -126,7 +131,8 @@ public class GameSessionImpl extends AbstractGameSession {
             board.removePieceAt(piece.getCoordinates());
         }
         pickedPieces.clear();
-        moveWasCompleted = true;
+        moveWasCompleted = true;        
+        hints.setHints(availableMovesCollector.collectMoves());
     }
 
     private boolean noPickedPieces() {
@@ -135,5 +141,5 @@ public class GameSessionImpl extends AbstractGameSession {
 
     private List<AvailableMove> availableMoves() {
         return availableMoves;
-    }
+    }    
 }

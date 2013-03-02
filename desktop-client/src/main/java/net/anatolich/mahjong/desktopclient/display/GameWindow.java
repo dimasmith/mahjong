@@ -2,6 +2,7 @@ package net.anatolich.mahjong.desktopclient.display;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
@@ -12,6 +13,9 @@ import javax.swing.KeyStroke;
 import net.anatolich.mahjong.desktopclient.Application;
 import net.anatolich.mahjong.game.Game;
 import net.anatolich.mahjong.game.GameSession;
+import net.anatolich.mahjong.game.capabilities.Hints;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -19,6 +23,8 @@ import net.anatolich.mahjong.game.GameSession;
  */
 public class GameWindow extends JFrame {
 
+    private static final Logger log = LoggerFactory.getLogger(GameWindow.class);
+    
     private JMenuBar menuBar;
     private JMenu settingsMenu;
     private JMenuItem settingsMenuItem;
@@ -27,6 +33,7 @@ public class GameWindow extends JFrame {
     private JMenu gameMenu;
     private JMenuItem exitMenuItem;
     private BoardComponent boardComponent;
+    private List<JMenuItem> dynamicItems = new ArrayList<>();
 
     public GameWindow() {
         setUp();
@@ -80,6 +87,23 @@ public class GameWindow extends JFrame {
         }
     }
 
+    private void reloadDynamicItems(GameSession gameSession) {
+        for (JMenuItem item : dynamicItems) {
+            gameMenu.remove(item);
+        }
+        if(gameSession.capabilities().supports(Hints.class)){
+            Hints hints = gameSession.capabilities().get(Hints.class);
+            ShowHintsAction showHintsAction = new ShowHintsAction(hints);
+            JMenuItem displayHintItem = new JMenuItem(showHintsAction);
+            addDynamicItem(displayHintItem);
+        }
+    }
+
+    private void addDynamicItem(JMenuItem displayHintItem) {
+        dynamicItems.add(displayHintItem);
+        gameMenu.add(displayHintItem);
+    }
+
     private class PlayGameAction extends AbstractAction {
 
         private final Game game;
@@ -93,6 +117,7 @@ public class GameWindow extends JFrame {
         public void actionPerformed( ActionEvent e ) {
             final GameSession gameSession = game.startGame();
             startGame(gameSession);
+            reloadDynamicItems(gameSession);
         }
     }
 
@@ -109,6 +134,26 @@ public class GameWindow extends JFrame {
         public void actionPerformed( ActionEvent e ) {
             gameWindow.dispose();
         }
+    }
+    
+    private class ShowHintsAction extends AbstractAction {
+        private final Hints hints;
+
+        private ShowHintsAction(Hints hints) {
+            super();
+            this.hints = hints;
+            putValue(NAME, "Show hint");
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (hints.hasHints()){
+                log.info(String.format("Hint: %s", hints.nextHint()));
+            } else {
+                log.info("No hints");
+            }
+        }
+        
     }
 
     private class DevRepaintAction extends AbstractAction {
