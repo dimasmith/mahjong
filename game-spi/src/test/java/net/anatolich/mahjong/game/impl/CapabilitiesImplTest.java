@@ -62,6 +62,15 @@ public class CapabilitiesImplTest {
         assertCapabilityPresent(SomeCapability.class, someCapability2);
     }
 
+    @Test
+    public void registerCapabilityByInterface() {
+        SomeCapability capability = new SomeCapability();
+        
+        capabilities.register(capability, CapabilityInterface.class);
+        
+        assertCapabilityPresent(CapabilityInterface.class, capability);
+    }
+
     private <T> void assertCapabilityPresent(final Class<T> capabilityType, T capability) {
         assertTrue(String.format("%s must be present", capabilityType.getName()), hasCapability(capabilityType));
         assertEquals(String.format("%s must be present", capabilityType.getName()), capability, getCapability(capabilityType));
@@ -80,9 +89,9 @@ public class CapabilitiesImplTest {
         return capabilities.get(capabilityType);
     }
 
-    private static class SomeCapability {
-    }
+    private interface CapabilityInterface {}
 
-    private static class OtherCapability {
-    }
+    private static class SomeCapability implements CapabilityInterface {}
+
+    private static class OtherCapability {}
 }

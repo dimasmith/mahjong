@@ -93,11 +93,18 @@ public abstract class AbstractGameSession implements GameSession {
         }
     }
 
+    @Override
     public final Capabilities capabilities() {
         return capabilities;
     }
 
-    protected final <T> void register(T capability) {
+    protected final <T> void registerCapability(T capability) {
         capabilities.register(capability);
     }
+
+    public void registerCapability(Object capability, Class<?> capabilityType) {
+        capabilities.register(capability, capabilityType);
+    }
+    
+    
 }

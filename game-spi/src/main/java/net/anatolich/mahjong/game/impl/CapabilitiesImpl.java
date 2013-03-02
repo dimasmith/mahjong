@@ -33,4 +33,8 @@ public class CapabilitiesImpl implements Capabilities {
     public <T> void register(T capability) {
         supportedCapabilities.put(capability.getClass(), capability);
     }
+
+    public void register(Object capability, Class<?> capabilityType) {
+        supportedCapabilities.put(capabilityType, capability);
+    }
 }
