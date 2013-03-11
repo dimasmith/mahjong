@@ -11,6 +11,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import net.anatolich.mahjong.desktopclient.Application;
+import net.anatolich.mahjong.game.AvailableMove;
 import net.anatolich.mahjong.game.Game;
 import net.anatolich.mahjong.game.GameSession;
 import net.anatolich.mahjong.game.capabilities.Hints;
@@ -24,7 +25,7 @@ import org.slf4j.LoggerFactory;
 public class GameWindow extends JFrame {
 
     private static final Logger log = LoggerFactory.getLogger(GameWindow.class);
-    
+
     private JMenuBar menuBar;
     private JMenu settingsMenu;
     private JMenuItem settingsMenuItem;
@@ -104,6 +105,21 @@ public class GameWindow extends JFrame {
         gameMenu.add(displayHintItem);
     }
 
+    private static class ExitAction extends AbstractAction {
+
+        private final GameWindow gameWindow;
+
+        public ExitAction( GameWindow gameWindow ) {
+            this.gameWindow = gameWindow;
+            putValue(NAME, "Exit");
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e ) {
+            gameWindow.dispose();
+        }
+    }
+
     private class PlayGameAction extends AbstractAction {
 
         private final Game game;
@@ -121,21 +137,6 @@ public class GameWindow extends JFrame {
         }
     }
 
-    private static class ExitAction extends AbstractAction {
-
-        private final GameWindow gameWindow;
-
-        public ExitAction( GameWindow gameWindow ) {
-            this.gameWindow = gameWindow;
-            putValue(NAME, "Exit");
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e ) {
-            gameWindow.dispose();
-        }
-    }
-    
     private class ShowHintsAction extends AbstractAction {
         private final Hints hints;
 
@@ -148,12 +149,14 @@ public class GameWindow extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (hints.hasHints()){
-                log.info(String.format("Hint: %s", hints.nextHint()));
-            } else {
-                log.info("No hints");
+                final AvailableMove hint = hints.nextHint();
+                boardComponent.clearHighlighting();
+                boardComponent.highlight(hint.getStartPiece());
+                boardComponent.highlight(hint.getEndPiece());
+                boardComponent.repaint();
             }
         }
-        
+
     }
 
     private class DevRepaintAction extends AbstractAction {
