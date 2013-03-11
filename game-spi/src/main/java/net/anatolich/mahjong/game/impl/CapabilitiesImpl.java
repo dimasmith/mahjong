@@ -5,8 +5,8 @@ import java.util.Map;
 import net.anatolich.mahjong.game.capabilities.Capabilities;
 
 /**
- * Manages additional capabilities of objects. 
- * Contains method of registering capability {@link #register }
+ * Manages additional capabilities of objects. Contains method of registering
+ * capability {@link #register }
  *
  * @author Dmytro Kovalchuk
  * @version 1.0
@@ -21,16 +21,27 @@ public class CapabilitiesImpl implements Capabilities {
     }
 
     @Override
-    public <T> T get(Class<T> capability) {
-        return (T) supportedCapabilities.get(capability);
+    public <T> T get( Class<T> capability ) {
+        return ( T ) supportedCapabilities.get( capability );
     }
 
     @Override
-    public boolean supports(Class<?> capability) {
-        return supportedCapabilities.containsKey(capability);
+    public boolean supports( Class<?> capability ) {
+        return supportedCapabilities.containsKey( capability );
     }
 
-    public <T> void register(T capability) {
-        supportedCapabilities.put(capability.getClass(), capability);
+    public <T> void register( T capability ) {
+        supportedCapabilities.put( capability.getClass(), capability );
+    }
+
+    /**
+     * Registers capability with certain type.
+     *
+     * @param <T>
+     * @param capability
+     * @param type
+     */
+    public <T> void register( T capability, Class<? super T> type ) {
+        supportedCapabilities.put( type, capability );
     }
 }

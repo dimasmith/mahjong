@@ -62,6 +62,15 @@ public class CapabilitiesImplTest {
         assertCapabilityPresent(SomeCapability.class, someCapability2);
     }
 
+    @Test
+    public void registerCapabilityByType() {
+        SomeCapabilityImpl capabilityImpl = new SomeCapabilityImpl();
+
+        capabilities.register( capabilityImpl, SomeCapability.class );
+
+        assertCapabilityPresent( SomeCapability.class, capabilityImpl );
+    }
+
     private <T> void assertCapabilityPresent(final Class<T> capabilityType, T capability) {
         assertTrue(String.format("%s must be present", capabilityType.getName()), hasCapability(capabilityType));
         assertEquals(String.format("%s must be present", capabilityType.getName()), capability, getCapability(capabilityType));
@@ -84,5 +93,8 @@ public class CapabilitiesImplTest {
     }
 
     private static class OtherCapability {
+    }
+
+    private static class SomeCapabilityImpl extends SomeCapability {
     }
 }
