@@ -8,7 +8,7 @@
   </parent>
   <artifactId>test</artifactId>
   <name>test</name>
-  
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -24,6 +24,7 @@
       <groupId>net.anatolich.mahjong</groupId>
       <artifactId>game-api</artifactId>
       <version>0.2-SNAPSHOT</version>
+      <type>jar</type>
     </dependency>
   </dependencies>
 </project>

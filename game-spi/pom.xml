@@ -9,7 +9,7 @@
   <artifactId>game-spi</artifactId>
   <name>game-spi</name>
   <url>http://maven.apache.org</url>
-  
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -20,6 +20,7 @@
       <groupId>net.anatolich.mahjong</groupId>
       <artifactId>game-api</artifactId>
       <version>0.2-SNAPSHOT</version>
+      <type>jar</type>
     </dependency>
     <dependency>
       <groupId>org.easymock</groupId>
