@@ -23,7 +23,7 @@ public abstract class HintsCompatibilityTest {
     
     @Test(expected = NoHintsException.class)
     public void nextMethodOnEmptyHintsThrowsException(){
-        Hints hints = createHints(Collections.EMPTY_LIST);
+        Hints hints = createHints(Collections.<AvailableMove>EMPTY_LIST);
         assertFalse("Hints must be empty", hints.hasHints());
         hints.nextHint(); // Exception is expected
     }
@@ -44,10 +44,12 @@ public abstract class HintsCompatibilityTest {
     }
 
     private List<AvailableMove> getTestHints() {
-        return Arrays.asList(new AvailableMove[]{
-            new AvailableMove(makePiece().bamboo().one().at(0,0,0), makePiece().bamboo().one().at(2,0,0)),
-            new AvailableMove(makePiece().bamboo().two().at(0,2,0), makePiece().bamboo().two().at(2,2,0))
-        });
+        return Arrays.asList(
+            new AvailableMove(makePiece().bamboo().one().at(0,0,0),
+							  makePiece().bamboo().one().at(2,0,0)),
+            new AvailableMove(makePiece().bamboo().two().at(0,2,0),
+							  makePiece().bamboo().two().at(2,2,0))
+        );
     }
 
     protected abstract Hints createHints(List<AvailableMove> testHints);
