@@ -3,13 +3,14 @@ package net.anatolich.mahjong.desktopclient.display;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
+
 import net.anatolich.mahjong.game.Board;
 import net.anatolich.mahjong.game.BoardEvent;
 import net.anatolich.mahjong.game.BoardListener;
@@ -20,8 +21,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Renders mahjong board.
  *
  * @author Dmytro Kovalchuk
+ * @since 0.1
+ * @version 1.0
  */
 public class DefaultBoardRenderer implements BoardListener {
 
@@ -71,12 +75,21 @@ public class DefaultBoardRenderer implements BoardListener {
 
     private Shape createPieceClip( Coordinates coordinates ) {
         final Coordinates[] touchingPiecesCoordinates = new Coordinates[]{ coordinates.translate( -2, -1, 0 ), coordinates.translate( -2, 0, 0 ), coordinates.translate( -2, 1, 0 ), coordinates.translate( -2, 2, 0 ), coordinates.translate( -1, 2, 0 ), coordinates.translate( 0, 2, 0 ) };
-        final Area baseClippingPath = new Area( pieceRenderer.getClip( calculateX( coordinates ), calculateY( coordinates ) ) );
+		int baseX = calculateX( coordinates );
+		int baseY = calculateY( coordinates );
+		final AffineTransform baseTranslation = AffineTransform.getTranslateInstance( baseX, baseY );
+		final Area baseClippingPath = new Area( baseTranslation.createTransformedShape( pieceRenderer.getClip() ) );
+
         for ( Coordinates coords : touchingPiecesCoordinates ) {
             if ( board.getPieceAt( coords ) == null ) {
                 continue;
             }
-            Shape touchingOutline = pieceRenderer.getClip( calculateX( coords ), calculateY( coords ) );
+			int touchingX = calculateX( coords );
+			int touchingY = calculateY( coords );
+
+			final AffineTransform touchingTranslation = AffineTransform.getTranslateInstance( touchingX, touchingY );
+
+			Shape touchingOutline = touchingTranslation.createTransformedShape( pieceRenderer.getClip() );
             baseClippingPath.subtract( new Area( touchingOutline ) );
         }
         return baseClippingPath;
@@ -99,7 +112,8 @@ public class DefaultBoardRenderer implements BoardListener {
         Graphics2D pieceGraphics = ( Graphics2D ) g.create();
         Shape clip = createPieceClip( piece.getCoordinates() );
         pieceGraphics.setClip( clip );
-        pieceRenderer.paint( x, y, isSelected( piece ), isHighlighted( piece ), piece.getTile(), pieceGraphics );
+		pieceGraphics.translate( x, y );
+        pieceRenderer.paint( piece.getTile(), isSelected( piece ), isHighlighted( piece ), pieceGraphics );
         pieceGraphics.dispose();
     }
 
