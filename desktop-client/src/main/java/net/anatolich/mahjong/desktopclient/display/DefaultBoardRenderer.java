@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
 import net.anatolich.mahjong.game.Board;
 import net.anatolich.mahjong.game.BoardEvent;
 import net.anatolich.mahjong.game.BoardListener;
