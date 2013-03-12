@@ -89,12 +89,10 @@ public class CapabilitiesImplTest {
         return capabilities.get(capabilityType);
     }
 
-    private static class SomeCapability {
-    }
-
     private static class OtherCapability {
     }
 
-    private static class SomeCapabilityImpl extends SomeCapability {
-    }
+    private static class SomeCapability {}
+
+    private static class SomeCapabilityImpl extends SomeCapability {}
 }

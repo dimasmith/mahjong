@@ -9,7 +9,7 @@
   <artifactId>desktop-client</artifactId>
   <name>desktop-client</name>
   <url>http://maven.apache.org</url>
-  
+
     <description>Desktop client for mahjong engine</description>
     <dependencies>
         <dependency>
@@ -24,6 +24,7 @@
             <groupId>net.anatolich.mahjong</groupId>
             <artifactId>game-api</artifactId>
             <version>0.2-SNAPSHOT</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
