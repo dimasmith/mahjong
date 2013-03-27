@@ -1,5 +1,6 @@
-package net.anatolich.mahjong.game.layout;
+package net.anatolich.mahjong.mahjong;
 
+import net.anatolich.mahjong.mahjong.LayoutFactory;
 import net.anatolich.mahjong.game.Layout;
 import org.junit.Test;
 import static org.junit.Assert.*;

@@ -1,4 +1,4 @@
-package net.anatolich.mahjong.game.layout;
+package net.anatolich.mahjong.game.impl;
 
 import net.anatolich.mahjong.game.Layout;
 import java.util.ArrayList;
@@ -11,6 +11,11 @@ import java.util.Map;
 import java.util.Set;
 import net.anatolich.mahjong.game.Column;
 import net.anatolich.mahjong.game.Coordinates;
+import net.anatolich.mahjong.game.layout.EmptyLayerException;
+import net.anatolich.mahjong.game.layout.HangingSlotException;
+import net.anatolich.mahjong.game.layout.IllegalLayoutException;
+import net.anatolich.mahjong.game.layout.IntersectingSlotsException;
+import net.anatolich.mahjong.game.layout.Slot;
 
 /**
  * Holds bunch of slots that can be filled with tiles.

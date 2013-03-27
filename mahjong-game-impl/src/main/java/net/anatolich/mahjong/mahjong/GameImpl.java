@@ -8,7 +8,6 @@ import net.anatolich.mahjong.game.Layout;
 import net.anatolich.mahjong.game.impl.BoardFiller;
 import net.anatolich.mahjong.game.impl.DefaultBoard;
 import net.anatolich.mahjong.game.impl.DefaultTileSet;
-import net.anatolich.mahjong.game.layout.LayoutFactory;
 import net.anatolich.mahjong.game.rules.Rules;
 import net.anatolich.mahjong.game.spi.MutableBoard;
 import net.anatolich.mahjong.game.spi.TileSet;
