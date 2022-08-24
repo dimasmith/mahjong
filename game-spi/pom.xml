@@ -4,7 +4,7 @@
   <parent>
     <groupId>net.anatolich.mahjong</groupId>
     <artifactId>mahjong</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2.0</version>
   </parent>
   <artifactId>game-spi</artifactId>
   <name>game-spi</name>
@@ -19,8 +19,6 @@
     <dependency>
       <groupId>net.anatolich.mahjong</groupId>
       <artifactId>game-api</artifactId>
-      <version>0.2-SNAPSHOT</version>
-      <type>jar</type>
     </dependency>
     <dependency>
       <groupId>org.easymock</groupId>
@@ -30,7 +28,6 @@
     <dependency>
       <groupId>net.anatolich.mahjong</groupId>
       <artifactId>test</artifactId>
-      <version>0.2-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
