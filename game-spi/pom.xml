@@ -19,6 +19,7 @@
     <dependency>
       <groupId>net.anatolich.mahjong</groupId>
       <artifactId>game-api</artifactId>
+      <version>${project.parent.version}</version>
     </dependency>
     <dependency>
       <groupId>org.easymock</groupId>
@@ -28,6 +29,7 @@
     <dependency>
       <groupId>net.anatolich.mahjong</groupId>
       <artifactId>test</artifactId>
+      <version>${project.parent.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
