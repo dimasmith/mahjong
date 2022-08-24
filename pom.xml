@@ -100,6 +100,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <powermock.version>1.5</powermock.version>
+        <powermock.version>2.0.9</powermock.version>
     </properties>
 </project>
