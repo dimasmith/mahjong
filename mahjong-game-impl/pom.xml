@@ -4,22 +4,20 @@
   <parent>
     <groupId>net.anatolich.mahjong</groupId>
     <artifactId>mahjong</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2.0</version>
   </parent>
   <artifactId>mahjong-game-impl</artifactId>
   <name>mahjong-game-impl</name>
   <url>http://maven.apache.org</url>
-  
+
   <dependencies>
     <dependency>
       <groupId>net.anatolich.mahjong</groupId>
       <artifactId>game-api</artifactId>
-      <version>0.2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>net.anatolich.mahjong</groupId>
       <artifactId>game-spi</artifactId>
-      <version>0.2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.easymock</groupId>
@@ -34,7 +32,6 @@
     <dependency>
       <groupId>net.anatolich.mahjong</groupId>
       <artifactId>test</artifactId>
-      <version>0.2-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

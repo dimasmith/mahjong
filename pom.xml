@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.anatolich.mahjong</groupId>
     <artifactId>mahjong</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2.0</version>
     <packaging>pom</packaging>
     <name>mahjong</name>
     <url>https://github.com/dimasmith/mahjong</url>
