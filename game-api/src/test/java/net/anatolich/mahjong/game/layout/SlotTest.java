@@ -1,10 +1,8 @@
 package net.anatolich.mahjong.game.layout;
 
 import net.anatolich.mahjong.game.Coordinates;
-import net.anatolich.mahjong.game.Tile;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -17,7 +15,7 @@ public class SlotTest {
         final Coordinates coordinates = new Coordinates(0, 0, 0);
         final Slot slot = new Slot(coordinates);
 
-        assertThat(slot.getCoordinates(), is(coordinates));
+        Assertions.assertThat(slot.getCoordinates()).isEqualTo(coordinates);
     }
 
     @Test( expected = IllegalArgumentException.class )
@@ -40,11 +38,8 @@ public class SlotTest {
             new Slot(new Coordinates(3, 3, 0))
         };
 
-        for ( Slot intersectingSlot : intersectingSlots ) {
-            assertThat(String.format("Slot on %s must intersect base slot",
-                                     intersectingSlot.getCoordinates()),
-                       baseSlot.intersectsWith(intersectingSlot), is(true));
-        }
+        Assertions.assertThat(intersectingSlots)
+                .allSatisfy(slot -> Assertions.assertThat(slot.intersectsWith(baseSlot)).isTrue());
     }
 
     @Test
@@ -69,19 +64,16 @@ public class SlotTest {
             new Slot(new Coordinates(3, 4, 0))
         };
 
-        for ( Slot touchingSlot : touchingSlots ) {
-            assertThat(String.format("Slot on %s must not intersect base slot",
-                                     touchingSlot.getCoordinates()),
-                       baseSlot.intersectsWith(touchingSlot), is(false));
-        }
+        Assertions.assertThat(touchingSlots)
+                .allSatisfy(slot -> Assertions.assertThat(slot.intersectsWith(baseSlot)).isFalse());
     }
 
     @Test
     public void testSlotIntersection_OtherLayer() {
         Slot baseSlot = new Slot(new Coordinates(2, 2, 0));
         Slot otherSlot = new Slot(new Coordinates(2, 2, 1));
-        assertThat(String.format("Slot on %s must not intersect base slot. It's on other layer",
-                                 otherSlot.getCoordinates()),
-                   baseSlot.intersectsWith(otherSlot), is(false));
+        Assertions.assertThat(otherSlot.intersectsWith(baseSlot))
+                .as("slots must not intersect when on different layers")
+                .isFalse();
     }
 }

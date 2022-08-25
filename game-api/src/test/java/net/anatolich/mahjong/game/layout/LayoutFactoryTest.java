@@ -1,9 +1,8 @@
 package net.anatolich.mahjong.game.layout;
 
 import net.anatolich.mahjong.game.Layout;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 
 /**
  *
@@ -16,7 +15,7 @@ public class LayoutFactoryTest {
         LayoutFactory factory = new LayoutFactory();
         Layout layout = factory.getDefaultLayout();
 
-        assertThat(layout.getUpperBound().getLayer(), is(4));
-        assertThat(layout.getSlots().size(), is(144));
+        Assertions.assertThat(layout.getUpperBound().getLayer()).isEqualTo(4);
+        Assertions.assertThat(layout.getSlots()).hasSize(144);
     }
 }

@@ -1,12 +1,11 @@
 package net.anatolich.mahjong.game;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 
 /**
- *
  * @author Dmytro Kovalchuk<dimasmith@gmail.com>
  */
 public class CoordinatesTest {
@@ -19,9 +18,9 @@ public class CoordinatesTest {
 
         Coordinates coordinates = new Coordinates(x, y, l);
 
-        assertThat(coordinates.getX(), is(x));
-        assertThat(coordinates.getY(), is(y));
-        assertThat(coordinates.getLayer(), is(l));
+        Assertions.assertThat(coordinates.getX()).isEqualTo(x);
+        Assertions.assertThat(coordinates.getY()).isEqualTo(y);
+        Assertions.assertThat(coordinates.getLayer()).isEqualTo(l);
     }
 
     @Test
@@ -32,9 +31,9 @@ public class CoordinatesTest {
 
         Coordinates coordinates = new Coordinates(new Column(x, y), l);
 
-        assertThat(coordinates.getX(), is(x));
-        assertThat(coordinates.getY(), is(y));
-        assertThat(coordinates.getLayer(), is(l));
+        Assertions.assertThat(coordinates.getX()).isEqualTo(x);
+        Assertions.assertThat(coordinates.getY()).isEqualTo(y);
+        Assertions.assertThat(coordinates.getLayer()).isEqualTo(l);
     }
 
     @Test
@@ -42,7 +41,7 @@ public class CoordinatesTest {
         Coordinates coordinates = new Coordinates(0, 0, 0);
         Column column = new Column(0, 0);
 
-        assertThat(coordinates.isOnColumn(column), is(true));
+        Assertions.assertThat(coordinates.isOnColumn(column)).isTrue();
     }
 
     @Test
@@ -51,8 +50,8 @@ public class CoordinatesTest {
         final Coordinates coordinates1 = new Coordinates(1, 0, 0);
         final Coordinates coordinates2 = new Coordinates(0, 1, 0);
 
-        assertThat(coordinates1.isOnColumn(column), is(false));
-        assertThat(coordinates2.isOnColumn(column), is(false));
+        Assertions.assertThat(coordinates1.isOnColumn(column)).isFalse();
+        Assertions.assertThat(coordinates2.isOnColumn(column)).isFalse();
     }
 
     @Test
@@ -69,11 +68,10 @@ public class CoordinatesTest {
         final Coordinates coords4 = new Coordinates(x, otherValue, l);
         final Coordinates coords5 = new Coordinates(x, y, otherValue);
 
-        assertThat(coords1, is(coords2));
-
-        assertThat(coords1, not(is(coords3)));
-        assertThat(coords1, not(is(coords4)));
-        assertThat(coords1, not(is(coords5)));
+        Assertions.assertThat(coords1).isEqualTo(coords2)
+                .isNotEqualTo(coords3)
+                .isNotEqualTo(coords4)
+                .isNotEqualTo(coords5);
     }
 
     @Test
@@ -85,7 +83,7 @@ public class CoordinatesTest {
         final Coordinates coordinates = new Coordinates(x, y, layer);
         final Column expectedColumn = new Column(x, y);
 
-        assertThat(coordinates.getColumn(), is(expectedColumn));
+        Assertions.assertThat(coordinates.getColumn()).isEqualTo(expectedColumn);
     }
 
     @Test
@@ -93,9 +91,12 @@ public class CoordinatesTest {
         Coordinates coords = new Coordinates(1, 2, 3);
         Coordinates translated = coords.translate(2, 0, -1);
 
-        assertThat(coords.getX(), is(1));
-        assertThat(translated, is(new Coordinates(3, 2, 2)));
-        assertThat("Original coordinates must not change", coords, is(new Coordinates(1, 2, 3)));
+        Assertions.assertThat(coords.getX()).isEqualTo(1);
+        Assertions.assertThat(translated).isEqualTo(new Coordinates(3, 2, 2));
+        Assertions.assertThat(coords)
+                .as("original coordinates must not change")
+                .isEqualTo(new Coordinates(1, 2, 3));
+
         assertNotSame(coords, translated);
     }
 
@@ -104,8 +105,10 @@ public class CoordinatesTest {
         Coordinates coords = new Coordinates(3, 2, 3);
         Coordinates translated = coords.translate(-2, 2, 1);
 
-        assertThat(translated, is(new Coordinates(1, 4, 4)));
-        assertThat("Original coordinates must not change", coords, is(new Coordinates(3, 2, 3)));
+        Assertions.assertThat(translated).isEqualTo(new Coordinates(1, 4, 4));
+        Assertions.assertThat(coords)
+                .as("Original coordinates must not change")
+                .isEqualTo(new Coordinates(3, 2, 3));
         assertNotSame(coords, translated);
     }
 
@@ -116,9 +119,10 @@ public class CoordinatesTest {
         final Coordinates translation = new Coordinates(2, 0, -1);
         Coordinates translated = coords.translate(translation);
 
-        assertThat(coords.getX(), is(1));
-        assertThat(translated, is(new Coordinates(3, 2, 2)));
-        assertThat("Original coordinates must not change", coords, is(new Coordinates(1, 2, 3)));
+        Assertions.assertThat(coords.getX()).isEqualTo(1);
+        Assertions.assertThat(translated).isEqualTo(new Coordinates(3, 2, 2));
+        Assertions.assertThat(coords).as("Original coordinates must not change")
+                .isEqualTo(new Coordinates(1, 2, 3));
         assertNotSame(coords, translated);
     }
 
@@ -128,8 +132,10 @@ public class CoordinatesTest {
         final Coordinates translation = new Coordinates(-2, 2, 1);
         Coordinates translated = coords.translate(translation);
 
-        assertThat(translated, is(new Coordinates(1, 4, 4)));
-        assertThat("Original coordinates must not change", coords, is(new Coordinates(3, 2, 3)));
+        Assertions.assertThat(translated).isEqualTo(new Coordinates(1, 4, 4));
+        Assertions.assertThat(coords)
+                .as("Original coordinates must not change")
+                .isEqualTo(new Coordinates(3, 2, 3));
         assertNotSame(coords, translated);
     }
 }

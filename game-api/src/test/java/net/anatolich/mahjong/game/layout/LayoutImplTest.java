@@ -1,16 +1,13 @@
 package net.anatolich.mahjong.game.layout;
 
+import net.anatolich.mahjong.game.Coordinates;
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import net.anatolich.mahjong.game.Column;
-import net.anatolich.mahjong.game.Coordinates;
-import net.anatolich.mahjong.game.InvalidLayerException;
-import org.junit.Test;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -18,12 +15,14 @@ import static org.junit.Assert.*;
  */
 public class LayoutImplTest {
 
-    @Test( expected = IllegalArgumentException.class )
+    @Test
     public void testNullCannotBePassedAsConstructorArgument() {
-        new LayoutImpl("Default", "", null);
+        //noinspection ConstantConditions
+        Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> new LayoutImpl("Default", "", null));
     }
 
-    @Test( expected = EmptyLayerException.class )
+    @Test
     public void testValidate_DirectLayerGap() {
         final int emptyLayer = 1;
         final Coordinates coordinates1 = new Coordinates(0, 0, 0);
@@ -32,16 +31,13 @@ public class LayoutImplTest {
         slots.add(coordinates1);
         slots.add(coordinates2);
 
-        try {
-            new LayoutImpl("Default", "", slots);
-        } catch ( EmptyLayerException ex ) {
-            assertThat(ex.getEmptyLayer(), is(emptyLayer));
-            throw ex;
-        }
-
+        Assertions.assertThatExceptionOfType(EmptyLayerException.class)
+                .isThrownBy(() -> new LayoutImpl("Default", "", slots))
+                .extracting(EmptyLayerException::getEmptyLayer)
+                .isEqualTo(emptyLayer);
     }
 
-    @Test( expected = HangingSlotException.class )
+    @Test
     public void testValidate_DirectColumnGap() {
         final Set<Coordinates> slots = new HashSet<>();
 
@@ -50,12 +46,10 @@ public class LayoutImplTest {
         final Coordinates hangingSlot = new Coordinates(0, 0, 2);
         slots.add(hangingSlot);
 
-        try {
-            new LayoutImpl("Default", "", slots);
-        } catch ( HangingSlotException ex ) {
-            assertThat(ex.getHangingSlot(), is(hangingSlot));
-            throw ex;
-        }
+        Assertions.assertThatExceptionOfType(HangingSlotException.class)
+                .isThrownBy(() -> new LayoutImpl("Default", "", slots))
+                .extracting(HangingSlotException::getHangingSlot)
+                .isEqualTo(hangingSlot);
     }
 
     @Test
@@ -71,14 +65,14 @@ public class LayoutImplTest {
         slots.add(north);
         slots.add(south);
 
-        LayoutImpl layout = new LayoutImpl("Default", "", slots); // No exception must be thrown
-
+        Assertions.assertThatNoException()
+                .isThrownBy(() -> new LayoutImpl("Default", "", slots));
     }
 
     @Test
     public void testTopLayer_EmptyLayout() {
-        LayoutImpl layout = new LayoutImpl("Default", "", Collections.EMPTY_SET);
-        assertThat(layout.getUpperBound().getLayer(), is(0));
+        LayoutImpl layout = new LayoutImpl("Default", "", Set.of());
+        Assertions.assertThat(layout.getUpperBound().getLayer()).isZero();
     }
 
     @Test
@@ -87,7 +81,7 @@ public class LayoutImplTest {
         slots.add(new Coordinates(0, 0, 0));
 
         LayoutImpl layout = new LayoutImpl("Default", "", slots);
-        assertThat(layout.getUpperBound().getLayer(), is(0));
+        Assertions.assertThat(layout.getUpperBound().getLayer()).isZero();
     }
 
     @Test
@@ -98,7 +92,7 @@ public class LayoutImplTest {
         slots.add(new Coordinates(0, 0, 2));
 
         LayoutImpl layout = new LayoutImpl("Default", "", slots);
-        assertThat(layout.getUpperBound().getLayer(), is(2));
+        Assertions.assertThat(layout.getUpperBound().getLayer()).isEqualTo(2);
     }
 
     @Test
@@ -117,13 +111,13 @@ public class LayoutImplTest {
         Coordinates lowerBound = layout.getLowerBound();
         Coordinates upperBound = layout.getUpperBound();
 
-        assertThat(lowerBound, is(new Coordinates(2, 2, 0)));
-        assertThat(upperBound, is(new Coordinates(12, 16, 2)));
+        Assertions.assertThat(lowerBound).isEqualTo(new Coordinates(2, 2, 0));
+        Assertions.assertThat(upperBound).isEqualTo(new Coordinates(12, 16, 2));
     }
 
 
 
-    @Test( expected = IntersectingSlotsException.class )
+    @Test
     public void testValidate_OverlappingSlots() {
         final Set<Coordinates> slots = new HashSet<>();
         final int checkedLayer = 0;
@@ -134,6 +128,7 @@ public class LayoutImplTest {
         slots.add(coordinates1);
         slots.add(coordinates2);
 
-        new LayoutImpl("Default", "", slots); // Must throw IntersectingSlotsException
+        Assertions.assertThatExceptionOfType(IntersectingSlotsException.class)
+                .isThrownBy(() -> new LayoutImpl("Default", "", slots));
     }
 }

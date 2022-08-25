@@ -1,8 +1,8 @@
 package net.anatolich.mahjong.game;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 import static net.anatolich.mahjong.game.Tile.Type.*;
 import static net.anatolich.mahjong.game.Tile.Value.*;
 
@@ -53,11 +53,13 @@ public class AvailableMoveTest {
 
         AvailableMove availableMove = new AvailableMove(p1, p2);
         AvailableMove reverseMove = new AvailableMove(p2, p3);
-        assertThat(availableMove, not(reverseMove));
+        Assertions.assertThat(availableMove)
+                .isNotEqualTo(reverseMove);
 
         availableMove = new AvailableMove(p2, p1);
         reverseMove = new AvailableMove(p2, p3);
-        assertThat(availableMove, not(reverseMove));
+        Assertions.assertThat(availableMove)
+                .isNotEqualTo(reverseMove);
     }
     
     @Test

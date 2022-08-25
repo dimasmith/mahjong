@@ -1,11 +1,9 @@
 package net.anatolich.mahjong.game;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 
 /**
- *
  * @author Dmytro Kovalchuk<dimasmith@gmail.com>
  */
 public class ColumnTest {
@@ -17,24 +15,24 @@ public class ColumnTest {
 
         final Column column = new Column(x, y);
 
-        assertThat(column.getX(), is(x));
-        assertThat(column.getY(), is(y));
+        Assertions.assertThat(column.getX()).isEqualTo(x);
+        Assertions.assertThat(column.getY()).isEqualTo(y);
     }
 
     @Test
-    public void testEquals(){
+    public void testEquals() {
         final int x = 10;
         final int y = 20;
 
         final Column column1 = new Column(x, y);
         final Column column2 = new Column(x, y);
 
-        assertThat(column1, is(column2));
+        Assertions.assertThat(column1).isEqualTo(column2);
 
     }
 
     @Test
-    public void testEquals_Failure(){
+    public void testEquals_Failure() {
         final int x = 10;
         final int y = 20;
         final int other = 30;
@@ -43,8 +41,8 @@ public class ColumnTest {
         final Column column2 = new Column(other, y);
         final Column column3 = new Column(x, other);
 
-        assertThat(column1, is(not(column2)));
-        assertThat(column1, is(not(column3)));
+        Assertions.assertThat(column1).isNotEqualTo(column2)
+                .isNotEqualTo(column3);
     }
 
     @Test
@@ -56,12 +54,13 @@ public class ColumnTest {
         final Column columnSW = new Column(1, 3);
         final Column columnSE = new Column(3, 3);
         final Column asideColumn = new Column(0, 0);
-        assertThat(Column.isColumnOnTopOfColumn(baseColumn, atopColumn), is(true));
-        assertThat(Column.isColumnOnTopOfColumn(baseColumn, columnNW), is(true));
-        assertThat(Column.isColumnOnTopOfColumn(baseColumn, columnNE), is(true));
-        assertThat(Column.isColumnOnTopOfColumn(baseColumn, columnSW), is(true));
-        assertThat(Column.isColumnOnTopOfColumn(baseColumn, columnSE), is(true));
-        assertThat(Column.isColumnOnTopOfColumn(baseColumn, asideColumn), is(false));
+
+        Assertions.assertThat(Column.isColumnOnTopOfColumn(baseColumn, atopColumn)).isTrue();
+        Assertions.assertThat(Column.isColumnOnTopOfColumn(baseColumn, columnNW)).isTrue();
+        Assertions.assertThat(Column.isColumnOnTopOfColumn(baseColumn, columnNE)).isTrue();
+        Assertions.assertThat(Column.isColumnOnTopOfColumn(baseColumn, columnSW)).isTrue();
+        Assertions.assertThat(Column.isColumnOnTopOfColumn(baseColumn, columnSE)).isTrue();
+        Assertions.assertThat(Column.isColumnOnTopOfColumn(baseColumn, asideColumn)).isFalse();
     }
 
     @Test
@@ -73,11 +72,12 @@ public class ColumnTest {
         final Column columnSW = new Column(1, 3);
         final Column columnSE = new Column(3, 3);
         final Column asideColumn = new Column(0, 0);
-        assertThat(atopColumn.isOnTopOf(baseColumn), is(true));
-        assertThat(columnNW.isOnTopOf(baseColumn), is(true));
-        assertThat(columnNE.isOnTopOf(baseColumn), is(true));
-        assertThat(columnSW.isOnTopOf(baseColumn), is(true));
-        assertThat(columnSE.isOnTopOf(baseColumn), is(true));
-        assertThat(asideColumn.isOnTopOf(baseColumn), is(false));
+
+        Assertions.assertThat(atopColumn.isOnTopOf(baseColumn)).isTrue();
+        Assertions.assertThat(columnNW.isOnTopOf(baseColumn)).isTrue();
+        Assertions.assertThat(columnNE.isOnTopOf(baseColumn)).isTrue();
+        Assertions.assertThat(columnSW.isOnTopOf(baseColumn)).isTrue();
+        Assertions.assertThat(columnSE.isOnTopOf(baseColumn)).isTrue();
+        Assertions.assertThat(asideColumn.isOnTopOf(baseColumn)).isFalse();
     }
 }
