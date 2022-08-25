@@ -68,6 +68,9 @@
                 <version>2.5.3</version>
                 <configuration>
                     <tagNameFormat>v@{project.version}</tagNameFormat>
+                    <pushChanges>false</pushChanges>
+                    <remoteTagging>false</remoteTagging>
+                    <scmCommentPrefix>build(release): </scmCommentPrefix>
                 </configuration>
             </plugin>
         </plugins>
