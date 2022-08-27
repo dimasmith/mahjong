@@ -1,0 +1,67 @@
+# Changelog
+
+All notable changes to this project will be added to this file.
+
+{{#tags}}
+## [{{name}}] {{#ifReleaseTag .}}({{tagDate .}}){{/ifReleaseTag}}
+
+{{#ifContainsBreaking commits}}
+### Breaking changes
+
+{{#commits}}
+{{#ifCommitBreaking .}}
+- {{#eachCommitScope .}} **{{.}}** {{/eachCommitScope}} {{{commitDescription
+        .}}} ([{{hash}}](https://github.com/{{ownerName}}/{{repoName}}/commit/{{hash}}))
+{{/ifCommitBreaking}}
+{{/commits}}
+{{/ifContainsBreaking}}
+{{#ifContainsType commits type='feat'}}
+### Features
+
+{{#commits}}
+{{#ifCommitType . type='feat'}}
+- {{#eachCommitScope .}} **{{.}}** {{/eachCommitScope}} {{{commitDescription
+        .}}} ([{{hash}}](https://github.com/{{ownerName}}/{{repoName}}/commit/{{hash}}))
+{{/ifCommitType}}
+{{/commits}}
+{{/ifContainsType}}
+{{#ifContainsType commits type='fix'}}
+### Bug Fixes
+
+{{#commits}}
+{{#ifCommitType . type='fix'}}
+- {{#eachCommitScope .}} **{{.}}** {{/eachCommitScope}} {{{commitDescription
+        .}}} ([{{hash}}](https://github.com/{{ownerName}}/{{repoName}}/commit/{{hash}}))
+{{/ifCommitType}}
+{{/commits}}
+{{/ifContainsType}}
+{{#ifContainsType commits type='change'}}
+### Changes
+
+{{#commits}}
+{{#ifCommitType . type='change'}}
+- {{#eachCommitScope .}} **{{.}}** {{/eachCommitScope}} {{{commitDescription
+        .}}} ([{{hash}}](https://github.com/{{ownerName}}/{{repoName}}/commit/{{hash}}))
+{{/ifCommitType}}
+{{/commits}}
+{{/ifContainsType}}
+{{#ifContainsType commits type='chore'}}
+### Other
+
+{{#commits}}
+{{#ifCommitType . type='chore'}}
+{{#ifCommitScope . scope="release"}}
+{{else}}
+{{#ifEquals hash "a00562341adbf05"}}
+{{else}}
+{{#ifEquals hash "f7e981bbfb135c1"}}
+{{else}}
+- {{#eachCommitScope .}} **{{.}}** {{/eachCommitScope}} {{{commitDescription
+        .}}} ([{{hash}}](https://github.com/{{ownerName}}/{{repoName}}/commit/{{hash}}))
+{{/ifEquals}}
+{{/ifEquals}}
+{{/ifCommitScope}}
+{{/ifCommitType}}
+{{/commits}}
+{{/ifContainsType}}
+{{/tags}}
