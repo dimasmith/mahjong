@@ -28,3 +28,39 @@ java -jar desktop-client/target/desktop-client-*-with-dependencies.jar
 
 You should probably find something more interesting than a project abandonned for 10 years :)
 
+## Commit convention
+
+Use conventional commits and ideas expressed in the [article](https://medium.com/neudesic-innovation/conventional-commits-a-better-way-78d6785c2e08).
+
+### Notable commit templates
+
+#### Change dependency
+
+```
+build(deps): change the dependency
+```
+
+#### Release activities
+
+```
+chore(release): prepare release versions
+```
+
+## Changelog
+
+Make sure you prepared a changelog before merging into the main branch.
+Use the included maven plugin to do this.
+
+```shell
+mvn git-changelog-maven-plugin:git-changelog
+```
+ 
+## Release
+
+The project should follow semver for the api module.
+
+Tag your releases with the version prefixed via `v`:
+
+```
+v0.2.1
+```
