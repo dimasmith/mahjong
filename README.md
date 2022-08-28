@@ -64,3 +64,11 @@ Tag your releases with the version prefixed via `v`:
 ```
 v0.2.1
 ```
+
+To start a new release:
+
+- Create a release branch from the main branch (`release/0.2.1`);
+- Run maven release plugin to kick off the release process (`mvn release:prepare`);
+- Push and merge your changes;
+- Push the release tag;
+- Create a GitHub release;
