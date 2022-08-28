@@ -79,6 +79,7 @@
                 <version>1.92</version>
                 <configuration>
                     <templateFile>changelog-template.handlebars</templateFile>
+                    <fromCommit>v0.2.0</fromCommit>
                 </configuration>
             </plugin>
         </plugins>

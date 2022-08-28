@@ -20,7 +20,7 @@ All notable changes to this project will be added to this file.
 
 {{#commits}}
 {{#ifCommitType . type='feat'}}
-- {{#eachCommitScope .}} **{{.}}** {{/eachCommitScope}} {{{commitDescription
+-{{#eachCommitScope .}} **{{.}}** {{/eachCommitScope}} {{{commitDescription
         .}}} ([{{hash}}](https://github.com/{{ownerName}}/{{repoName}}/commit/{{hash}}))
 {{/ifCommitType}}
 {{/commits}}
@@ -30,7 +30,7 @@ All notable changes to this project will be added to this file.
 
 {{#commits}}
 {{#ifCommitType . type='fix'}}
-- {{#eachCommitScope .}} **{{.}}** {{/eachCommitScope}} {{{commitDescription
+-{{#eachCommitScope .}} **{{.}}** {{/eachCommitScope}} {{{commitDescription
         .}}} ([{{hash}}](https://github.com/{{ownerName}}/{{repoName}}/commit/{{hash}}))
 {{/ifCommitType}}
 {{/commits}}
@@ -40,28 +40,17 @@ All notable changes to this project will be added to this file.
 
 {{#commits}}
 {{#ifCommitType . type='change'}}
-- {{#eachCommitScope .}} **{{.}}** {{/eachCommitScope}} {{{commitDescription
+-{{#eachCommitScope .}} **{{.}}** {{/eachCommitScope}} {{{commitDescription
         .}}} ([{{hash}}](https://github.com/{{ownerName}}/{{repoName}}/commit/{{hash}}))
 {{/ifCommitType}}
 {{/commits}}
 {{/ifContainsType}}
-{{#ifContainsType commits type='chore'}}
-### Other
-
+{{#ifContainsType commits type='build'}}
+### Dependencies
 {{#commits}}
-{{#ifCommitType . type='chore'}}
-{{#ifCommitScope . scope="release"}}
-{{else}}
-{{#ifEquals hash "a00562341adbf05"}}
-{{else}}
-{{#ifEquals hash "f7e981bbfb135c1"}}
-{{else}}
-- {{#eachCommitScope .}} **{{.}}** {{/eachCommitScope}} {{{commitDescription
-        .}}} ([{{hash}}](https://github.com/{{ownerName}}/{{repoName}}/commit/{{hash}}))
-{{/ifEquals}}
-{{/ifEquals}}
+{{#ifCommitScope . scope='deps'}}
+- {{{commitDescription .}}} ([{{hash}}](https://github.com/{{ownerName}}/{{repoName}}/commit/{{hash}}))
 {{/ifCommitScope}}
-{{/ifCommitType}}
 {{/commits}}
 {{/ifContainsType}}
 {{/tags}}
