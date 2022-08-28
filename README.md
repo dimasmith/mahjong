@@ -69,6 +69,7 @@ To start a new release:
 
 - Create a release branch from the main branch (`release/0.2.1`);
 - Run maven release plugin to kick off the release process (`mvn release:prepare`);
+- Generate and commit a changelog (`mvn git-changelog-maven-plugin:git-changelog`);
 - Push and merge your changes;
 - Push the release tag;
 - Create a GitHub release;
