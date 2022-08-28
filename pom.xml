@@ -70,7 +70,7 @@
                     <tagNameFormat>v@{project.version}</tagNameFormat>
                     <pushChanges>false</pushChanges>
                     <remoteTagging>false</remoteTagging>
-                    <scmCommentPrefix>build(release): </scmCommentPrefix>
+                    <scmCommentPrefix>chore(release): </scmCommentPrefix>
                 </configuration>
             </plugin>
             <plugin>
