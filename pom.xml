@@ -76,7 +76,7 @@
             <plugin>
                 <groupId>se.bjurr.gitchangelog</groupId>
                 <artifactId>git-changelog-maven-plugin</artifactId>
-                <version>1.92</version>
+                <version>1.95.5</version>
                 <configuration>
                     <templateFile>changelog-template.handlebars</templateFile>
                     <fromCommit>v0.2.0</fromCommit>
